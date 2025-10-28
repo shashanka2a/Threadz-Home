@@ -19,7 +19,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>{children}</body>
+      <body>
+        {/* Providers (Cart, etc.) */}
+        {/* @ts-expect-error Async Server Component interop */}
+        <>{require('./providers').default({ children })}</>
+      </body>
     </html>
   );
 }

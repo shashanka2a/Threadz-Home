@@ -2,6 +2,7 @@
 import { motion, useInView } from "motion/react";
 import type { Variants } from "motion/react";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
@@ -49,6 +50,7 @@ function AnimatedSection({ children, className = "" }: { children: React.ReactNo
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
@@ -70,7 +72,7 @@ export default function App() {
             <a href="#designs" className="nav-link">Designs</a>
             <a href="#create" className="nav-link">Create</a>
             <a href="#ai-lab" className="nav-link">AI Lab</a>
-            <Button size="sm" className="bg-purple-600 hover:bg-purple-700">Shop</Button>
+            <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push('/products')}>Shop</Button>
           </div>
         </div>
       </nav>
@@ -124,6 +126,7 @@ export default function App() {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-white text-black hover:bg-purple-50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl hover:shadow-purple-500/30 px-6 sm:px-8 h-12 sm:h-11"
+                onClick={() => router.push('/products')}
               >
                 <Shirt className="mr-2 h-5 w-5" />
                 Explore Designs
@@ -134,6 +137,7 @@ export default function App() {
                 size="lg" 
                 variant="outline"
                 className="w-full sm:w-auto bg-transparent border-2 border-purple-300 text-purple-100 hover:bg-purple-500/10 hover:border-purple-200 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl hover:shadow-purple-400/20 px-6 sm:px-8 h-12 sm:h-11"
+                onClick={() => router.push('/ai')}
               >
                 <Pencil className="mr-2 h-5 w-5" />
                 Create Your Own
@@ -143,6 +147,7 @@ export default function App() {
               <Button 
                 size="lg" 
                 className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl hover:shadow-pink-500/30 px-6 sm:px-8 h-12 sm:h-11"
+                onClick={() => router.push('/ai')}
               >
                 <Sparkles className="mr-2 h-5 w-5" />
                 Drop a Vibe
@@ -512,6 +517,7 @@ export default function App() {
         <Button 
           className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 h-14 pointer-events-auto shadow-2xl shadow-purple-500/50"
           size="lg"
+          onClick={() => router.push('/ai')}
         >
           <Sparkles className="mr-2 h-5 w-5" />
           Start Creating
