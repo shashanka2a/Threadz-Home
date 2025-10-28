@@ -5,7 +5,9 @@ export const metadata: Metadata = {
   title: 'Threadz.wtf',
   description: 'AI apparel creation and designs.',
   icons: {
-    icon: '/favicon.ico',
+    icon: '/logo.svg',
+    shortcut: '/logo.svg',
+    apple: '/logo.svg',
   },
   openGraph: {
     title: 'Threadz.wtf',

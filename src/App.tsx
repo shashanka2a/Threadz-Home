@@ -55,7 +55,10 @@ export default function App() {
       {/* Mobile Navigation */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <h1 className="logo-text">Threadz.wtf</h1>
+          <div className="flex items-center gap-2">
+            <img src="/logo.svg" alt="Threadz" width={28} height={28} />
+            <h1 className="logo-text">Threadz.wtf</h1>
+          </div>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg hover:bg-purple-500/10 transition-colors"
