@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-export default function SuccessPage() {
+function SuccessContent() {
   const params = useSearchParams();
   const router = useRouter();
   const order = params.get('order') ?? 'ORDER-XXXXXX';
@@ -18,6 +18,14 @@ export default function SuccessPage() {
         <Button variant="outline" onClick={() => router.push('/')}>Back home</Button>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="max-w-xl mx-auto px-4 py-16 text-center">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 }
 
