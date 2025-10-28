@@ -2,8 +2,7 @@
 import { motion, useInView } from "motion/react";
 import type { Variants } from "motion/react";
 import { useRef, useState } from "react";
-import dynamic from 'next/dynamic';
-const ImageWithFallback = dynamic(() => import('./components/figma/ImageWithFallback'));
+import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Sparkles, Pencil, Shirt, Rocket, Instagram, Twitter, Facebook, Menu, X } from "lucide-react";
