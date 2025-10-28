@@ -57,7 +57,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <img src="/logo.svg" alt="Threadz" width={28} height={28} />
-            <h1 className="logo-text">Threadz.wtf</h1>
+            <h1 className="logo-text">Threadz.studio</h1>
           </div>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -493,7 +493,7 @@ export default function App() {
             
             {/* Brand */}
             <div className="pt-6 sm:pt-8 border-t border-purple-900/30">
-              <h3 className="graffiti-heading mb-2">Threadz.wtf</h3>
+              <h3 className="graffiti-heading mb-2">Threadz.studio</h3>
               <p className="text-gray-500">
                 © 2025 Threadz. All vibes reserved.
               </p>

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Threadz.wtf',
+  title: 'Threadz.studio',
   description: 'AI apparel creation and designs.',
   icons: {
     icon: '/logo.svg',
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     apple: '/logo.svg',
   },
   openGraph: {
-    title: 'Threadz.wtf',
+    title: 'Threadz.studio',
     description: 'AI apparel creation and designs.',
     images: ['/og-image.png'],
   },
