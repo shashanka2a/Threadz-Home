@@ -2,7 +2,8 @@
 import { motion, useInView } from "motion/react";
 import type { Variants } from "motion/react";
 import { useRef, useState } from "react";
-import { ImageWithFallback } from "./components/figma/ImageWithFallback";
+import dynamic from 'next/dynamic';
+const ImageWithFallback = dynamic(() => import('./components/figma/ImageWithFallback'));
 import { Button } from "./components/ui/button";
 import { Input } from "./components/ui/input";
 import { Sparkles, Pencil, Shirt, Rocket, Instagram, Twitter, Facebook, Menu, X } from "lucide-react";
@@ -195,7 +196,7 @@ export default function App() {
                 Your Style,<br />Your Rules
               </h3>
               <p className="text-gray-200 leading-relaxed">
-                From bold graphics to AI-powered designs, create apparel that speaks your language. No templates. No limits. Just pure expression.
+                From bold graphics to AI designs, create apparel that speaks your language. No templates. No limits. Just pure expression.
               </p>
             </div>
             
@@ -216,7 +217,7 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="mb-1 text-purple-100">AI Design Studio</h4>
-                  <p className="text-gray-300 leading-relaxed">Type your vibe, get instant designs powered by AI</p>
+                  <p className="text-gray-300 leading-relaxed">Type your vibe, get instant designs by AI</p>
                 </div>
               </motion.div>
               
@@ -229,7 +230,7 @@ export default function App() {
                 </div>
                 <div>
                   <h4 className="mb-1 text-purple-100">Custom Everything</h4>
-                  <p className="text-gray-300 leading-relaxed">Tees, hoodies, caps — print what you imagine</p>
+                  <p className="text-gray-300 leading-relaxed">Tees, hoodies, caps - print what you imagine</p>
                 </div>
               </motion.div>
               
@@ -440,7 +441,7 @@ export default function App() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
-                Affordable, sustainable, and expressive — for campus fits and night rides alike.
+                Affordable, sustainable, and expressive - for campus fits and night rides.
               </motion.p>
             </div>
           </div>

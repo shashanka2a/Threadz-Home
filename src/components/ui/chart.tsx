@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import * as RechartsPrimitive from "recharts";
+import dynamic from 'next/dynamic';
+const RechartsPrimitive = dynamic(() => import('recharts'), { ssr: false }) as unknown as typeof import('recharts');
 
 import { cn } from "./utils";
 
