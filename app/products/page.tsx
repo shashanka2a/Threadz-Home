@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
 import { ShoppingCart, Star, Heart, Zap, X, Plus, Minus, Trash2, CreditCard, Lock, Package, Truck, CheckCircle, Clock, MapPin } from "lucide-react";
@@ -103,10 +104,17 @@ export default function ProductsPage() {
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [likedProducts, setLikedProducts] = useState<Set<string>>(new Set());
   const [showCart, setShowCart] = useState(false);
+  const [showContactInfo, setShowContactInfo] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
   const [showTracking, setShowTracking] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [contactInfo, setContactInfo] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    whatsappUpdates: false
+  });
   const [paymentData, setPaymentData] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -155,6 +163,25 @@ export default function ProductsPage() {
   const handleInputChange = (field: string, value: string) => {
     setPaymentData(prev => ({ ...prev, [field]: value }));
   };
+
+  const handleContactInfoChange = (field: string, value: string | boolean) => {
+    setContactInfo(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleContactInfoSubmit = () => {
+    if (contactInfo.name && (contactInfo.email || contactInfo.mobile)) {
+      // Pre-fill payment data with contact info
+      setPaymentData(prev => ({
+        ...prev,
+        name: contactInfo.name,
+        email: contactInfo.email
+      }));
+      setShowContactInfo(false);
+      setShowCheckout(true);
+    }
+  };
+
+  const isContactInfoValid = contactInfo.name && (contactInfo.email || contactInfo.mobile);
 
   const isFormValid = paymentData.cardNumber && paymentData.expiryDate && paymentData.cvv && paymentData.name && paymentData.email && paymentData.address && paymentData.city && paymentData.zipCode;
 
@@ -404,7 +431,7 @@ export default function ProductsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
               onClick={() => setShowCart(false)}
             />
             <motion.div
@@ -412,7 +439,8 @@ export default function ProductsPage() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
               transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed right-0 top-0 bottom-0 w-full sm:w-[480px] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border-l border-purple-500/30 shadow-2xl z-50 overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 w-full sm:w-[480px] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border-l border-purple-500/30 shadow-2xl z-[70] overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -507,7 +535,7 @@ export default function ProductsPage() {
                     <Button
                       onClick={() => {
                         setShowCart(false);
-                        setShowCheckout(true);
+                        setShowContactInfo(true);
                       }}
                       className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white h-12 text-lg font-semibold"
                     >
@@ -522,6 +550,103 @@ export default function ProductsPage() {
         )}
       </AnimatePresence>
 
+      {/* Contact Info Modal */}
+      <AnimatePresence>
+        {showContactInfo && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+              onClick={() => setShowContactInfo(false)}
+            />
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-[500px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl overflow-y-auto pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Contact Information
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowContactInfo(false)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <Label className="text-purple-300 mb-2 block">Full Name *</Label>
+                      <Input
+                        placeholder="John Doe"
+                        value={contactInfo.name}
+                        onChange={(e) => handleContactInfoChange('name', e.target.value)}
+                        className="bg-gray-800/50 border-purple-500/30 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-purple-300 mb-2 block">Email *</Label>
+                      <Input
+                        type="email"
+                        placeholder="john@example.com"
+                        value={contactInfo.email}
+                        onChange={(e) => handleContactInfoChange('email', e.target.value)}
+                        className="bg-gray-800/50 border-purple-500/30 text-white"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-purple-300 mb-2 block">Mobile Number *</Label>
+                      <Input
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        value={contactInfo.mobile}
+                        onChange={(e) => handleContactInfoChange('mobile', e.target.value)}
+                        className="bg-gray-800/50 border-purple-500/30 text-white"
+                      />
+                      <p className="text-xs text-gray-400 mt-1">At least email or mobile is required</p>
+                    </div>
+                    <div className="flex items-start gap-3 p-4 bg-purple-600/10 border border-purple-500/30 rounded-lg">
+                      <Checkbox
+                        id="whatsapp-updates"
+                        checked={contactInfo.whatsappUpdates}
+                        onCheckedChange={(checked) => handleContactInfoChange('whatsappUpdates', checked === true)}
+                        className="border-purple-500/50 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600 mt-1"
+                      />
+                      <Label 
+                        htmlFor="whatsapp-updates" 
+                        className="text-sm text-gray-300 cursor-pointer leading-relaxed"
+                      >
+                        Get order updates and exclusive offers via WhatsApp
+                      </Label>
+                    </div>
+                    <div className="border-t border-purple-500/30 pt-4">
+                      <Button
+                        onClick={handleContactInfoSubmit}
+                        disabled={!isContactInfoValid}
+                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white h-12 text-lg font-semibold disabled:opacity-50"
+                      >
+                        Continue to Payment
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Checkout Modal */}
       <AnimatePresence>
         {showCheckout && (
@@ -530,30 +655,32 @@ export default function ProductsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
               onClick={() => setShowCheckout(false)}
             />
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[600px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl z-50 overflow-y-auto"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Secure Checkout
-                  </h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowCheckout(false)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <X className="h-5 w-5" />
-                  </Button>
-                </div>
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-[600px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl overflow-y-auto pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Secure Checkout
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowCheckout(false)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
 
                 <div className="space-y-6">
                   <div>
@@ -661,6 +788,7 @@ export default function ProductsPage() {
                 </div>
               </div>
             </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>
@@ -673,30 +801,32 @@ export default function ProductsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
               onClick={() => setShowTracking(false)}
             />
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="fixed inset-0 sm:inset-auto sm:top-1/2 sm:left-1/2 sm:transform sm:-translate-x-1/2 sm:-translate-y-1/2 w-full sm:w-[600px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl z-50 overflow-y-auto"
-            >
-              <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    Order Tracking
-                  </h2>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setShowTracking(false)}
-                    className="text-gray-400 hover:text-white"
-                  >
-                    <X className="h-5 w-5" />
-                  </Button>
-                </div>
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-[600px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl overflow-y-auto pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Order Tracking
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowTracking(false)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
 
                 <div className="mb-6 p-4 bg-purple-600/10 border border-purple-500/30 rounded-lg">
                   <p className="text-sm text-gray-400">Order ID</p>
@@ -745,6 +875,7 @@ export default function ProductsPage() {
                 </div>
               </div>
             </motion.div>
+            </div>
           </>
         )}
       </AnimatePresence>
