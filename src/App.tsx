@@ -58,7 +58,7 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/logo.svg" alt="Threadz" width={28} height={28} />
+            <img src="/threadz-logo.png" alt="Threadz" width={28} height={28} />
             <h1 className="logo-text">Threadz.studio</h1>
           </div>
           <button 
@@ -291,7 +291,7 @@ export default function App() {
               {
                 title: "Fast Prints",
                 description: "Upload & print custom designs instantly",
-                image: "https://images.unsplash.com/photo-1666358085449-a10a39f33942?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFwaGljJTIwdHNoaXJ0JTIwZGVzaWduJTIwbWluaW1hbHxlbnwxfHx8fDE3NjE2NDkwODl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format",
                 accent: "from-orange-600 to-red-600"
               },
               {
@@ -303,7 +303,7 @@ export default function App() {
               {
                 title: "Sustainability First",
                 description: "Eco-friendly fabrics and responsible printing",
-                image: "https://images.unsplash.com/photo-1626897844971-aef92643f056?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtaW5pbWFsJTIwcHJvZHVjdCUyMHBob3RvZ3JhcGh5fGVufDF8fHx8MTc2MTYzMTkwN3ww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format",
                 accent: "from-green-600 to-emerald-600"
               },
               {

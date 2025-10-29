@@ -10,6 +10,11 @@ export type CartItem = {
   quantity: number;
   size?: string;
   color?: string;
+  type?: string;
+  description?: string;
+  style?: string;
+  colors?: string[];
+  originalPrompt?: string;
 };
 
 type CartContextValue = {

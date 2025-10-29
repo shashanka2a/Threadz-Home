@@ -1,14 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
 import { useRouter } from "next/navigation";
-import { Sparkles, ShoppingCart, AlertCircle } from "lucide-react";
+import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import Image from "next/image";
 
 export default function AIPage() {
   const [prompt, setPrompt] = useState("");
@@ -51,22 +52,28 @@ export default function AIPage() {
       // Parse the JSON response
       const designData = JSON.parse(text.replace(/```json\n?|\n?```/g, ''));
       
-      // Generate image using Gemini's image generation capabilities
-      const imagePrompt = `Create a visual mockup of a t-shirt design: ${designData.imagePrompt}. 
-      Show the design printed on a white t-shirt, clean and professional presentation.`;
+      // Use appropriate Unsplash images based on design style
+      const getImageUrl = (style: string) => {
+        const styleImages: Record<string, string> = {
+          'minimalist': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format',
+          'vintage': 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=400&fit=crop&q=80&auto=format',
+          'modern': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'geometric': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format',
+          'nature': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'abstract': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format'
+        };
+        return styleImages[style.toLowerCase()] || styleImages['modern'];
+      };
       
-      // For now, we'll use a placeholder image since Gemini doesn't directly generate images
-      // In a real implementation, you'd integrate with an image generation API
-      const mockImageUrl = `https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&${Date.now()}`;
-      
-      setGeneratedImage(mockImageUrl);
+      const imageUrl = getImageUrl(designData.style);
+      setGeneratedImage(imageUrl);
       
       // Create the design object
       const design = {
         id: `design-${Date.now()}`,
         name: designData.title,
         price: 29.99,
-        image: mockImageUrl,
+        image: imageUrl,
         description: designData.description,
         style: designData.style,
         colors: designData.colors,
@@ -79,7 +86,7 @@ export default function AIPage() {
       // Show success message briefly before redirecting
       setTimeout(() => {
         router.push("/cart");
-      }, 1500);
+      }, 2000);
       
     } catch (err) {
       console.error("AI generation error:", err);
@@ -90,138 +97,184 @@ export default function AIPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-12">
-      <div className="max-w-4xl mx-auto px-4">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            AI Design Generator
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Describe your vision and let AI create custom apparel designs for you
-          </p>
-        </div>
-
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-purple-600" />
-              Generate Your Design
-            </CardTitle>
-            <CardDescription>
-              Enter a detailed description of the design you want to create
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div>
-              <label htmlFor="prompt" className="block text-sm font-medium text-gray-700 mb-2">
-                Design Description
-              </label>
-              <Textarea
-                id="prompt"
-                placeholder="e.g., A minimalist mountain landscape with geometric shapes in navy blue and white, perfect for a hiking t-shirt..."
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                rows={4}
-                className="w-full"
-              />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-6">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Powered by Gemini AI
             </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+              AI Design
+              <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"> Generator</span>
+            </h1>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+              Describe your vision and let AI create custom apparel designs for you. 
+              From minimalist to vintage, we bring your ideas to life.
+            </p>
+          </motion.div>
+        </div>
+      </div>
 
-            {error && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
-                <AlertCircle className="h-4 w-4" />
-                <span className="text-sm">{error}</span>
+      {/* Main Content */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+        >
+          <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="text-center pb-8">
+              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
+                Create Your Design
+              </CardTitle>
+              <CardDescription className="text-lg text-gray-600">
+                Enter a detailed description of the design you want to create
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-8">
+              <div>
+                <label htmlFor="prompt" className="block text-sm font-semibold text-gray-700 mb-3">
+                  Design Description
+                </label>
+                <Textarea
+                  id="prompt"
+                  placeholder="e.g., A minimalist mountain landscape with geometric shapes in navy blue and white, perfect for a hiking t-shirt..."
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  rows={4}
+                  className="w-full text-lg border-gray-200 focus:border-purple-500 focus:ring-purple-500"
+                />
               </div>
-            )}
 
-            <div className="flex gap-4">
+              {error && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"
+                >
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                  <span className="font-medium">{error}</span>
+                </motion.div>
+              )}
+
               <Button
                 onClick={handleGenerate}
                 disabled={!prompt.trim() || isGenerating}
-                className="flex-1 bg-purple-600 hover:bg-purple-700"
+                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 {isGenerating ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                     Generating with AI...
                   </>
                 ) : (
                   <>
-                    <Sparkles className="h-4 w-4 mr-2" />
+                    <Wand2 className="h-5 w-5 mr-3" />
                     Generate Design
                   </>
                 )}
               </Button>
-            </div>
 
-            {generatedImage && (
-              <div className="mt-6 p-4 bg-white border rounded-lg">
-                <h3 className="font-medium text-gray-900 mb-3">Generated Design Preview</h3>
-                <div className="flex items-center gap-4">
-                  <img 
-                    src={generatedImage} 
-                    alt="Generated design" 
-                    className="w-20 h-20 object-cover rounded-lg border"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm text-gray-600">
-                      Design generated successfully! Added to your cart.
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      Redirecting to cart...
-                    </p>
+              {generatedImage && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl"
+                >
+                  <h3 className="font-semibold text-gray-900 mb-4 text-lg">Generated Design Preview</h3>
+                  <div className="flex items-center gap-6">
+                    <div className="relative">
+                      <Image 
+                        src={generatedImage} 
+                        alt="Generated design" 
+                        width={120}
+                        height={120}
+                        className="w-30 h-30 object-cover rounded-xl border-2 border-white shadow-lg"
+                      />
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <Sparkles className="h-3 w-3 text-white" />
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-gray-700 font-medium mb-2">
+                        Design generated successfully! Added to your cart.
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        Redirecting to cart in a moment...
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </div>
-            )}
+                </motion.div>
+              )}
 
-            {prompt.trim() && !generatedImage && !isGenerating && (
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                <h3 className="font-medium text-gray-900 mb-2">Preview</h3>
-                <p className="text-gray-600 text-sm">
-                  You're about to generate: <span className="font-medium">"{prompt}"</span>
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              {prompt.trim() && !generatedImage && !isGenerating && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="p-6 bg-gray-50 rounded-xl border border-gray-200"
+                >
+                  <h3 className="font-semibold text-gray-900 mb-3">Preview</h3>
+                  <p className="text-gray-600">
+                    You're about to generate: <span className="font-semibold text-purple-600">"{prompt}"</span>
+                  </p>
+                </motion.div>
+              )}
+            </CardContent>
+          </Card>
+        </motion.div>
 
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="h-6 w-6 text-purple-600" />
+        {/* Features Grid */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
+        >
+          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-0">
+              <div className="w-16 h-16 bg-gradient-to-r from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Wand2 className="h-8 w-8 text-purple-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">AI-Powered</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">AI-Powered</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Advanced Gemini AI technology creates unique designs based on your description
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingCart className="h-6 w-6 text-blue-600" />
+          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-0">
+              <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <ShoppingCart className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Instant Order</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Instant Order</h3>
+              <p className="text-gray-600 leading-relaxed">
                 Generated designs are automatically added to your cart for purchase
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardContent className="p-6 text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="h-6 w-6 text-green-600" />
+          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
+            <CardContent className="p-0">
+              <div className="w-16 h-16 bg-gradient-to-r from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <Palette className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Custom Quality</h3>
-              <p className="text-gray-600 text-sm">
+              <h3 className="text-xl font-bold text-gray-900 mb-3">Custom Quality</h3>
+              <p className="text-gray-600 leading-relaxed">
                 High-quality prints on premium apparel with fast shipping
               </p>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
