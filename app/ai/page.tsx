@@ -30,24 +30,60 @@ function AIPageContent() {
     try {
       // Initialize Gemini AI
       const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyAp8K90rlwgddEUzPbZQB0u8qLATmODdW4");
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      
+      // Pre-context prompt for expert graphic designer
+      const expertContext = `You are a 150 IQ graphic designer with 20+ years of experience in streetwear and apparel design. You have an exceptional understanding of:
+- Modern design trends and viral aesthetics
+- Typography, color theory, and visual hierarchy
+- What makes designs print-ready and visually striking
+- Gen-Z and tech culture humor and references
+- Minimalist, bold, and expressive design styles
+
+Your designs are always:
+- Print-ready and high-quality
+- Trendy and relevant to current culture
+- Visually balanced and aesthetically pleasing
+- Suitable for t-shirt printing and apparel
+- Unique and creative, never generic
+
+`;
 
       // Generate design description and image prompt
-      const designPrompt = `You are a professional apparel designer. Create a detailed design description for a t-shirt based on this user request: "${prompt}"
+      const designPrompt = `${expertContext}Create a detailed design description for a t-shirt based on this user request: "${prompt}"
 
       Respond with a JSON object containing:
       {
-        "title": "Creative title for the design",
-        "description": "Detailed description of the design",
-        "style": "Design style (minimalist, vintage, modern, etc.)",
+        "title": "Creative, catchy title for the design (max 5 words)",
+        "description": "Engaging description that captures the design's vibe and appeal",
+        "style": "Design style (minimalist, vintage, modern, geometric, abstract, urban, tech, etc.)",
         "colors": ["primary color", "secondary color"],
-        "imagePrompt": "Detailed prompt for generating a visual representation of this design"
+        "imagePrompt": "Detailed visual description of how this design would look as a t-shirt graphic"
       }
 
-      Make it creative, trendy, and suitable for apparel printing.`;
+      Make it creative, trendy, and perfect for apparel printing. The design should be bold, memorable, and aligned with streetwear culture.`;
 
-      const result = await model.generateContent(designPrompt);
-      const response = await result.response;
+      // Try different models in order of preference
+      const modelsToTry = ["gemini-2.0-flash-exp", "gemini-1.5-flash", "gemini-pro"];
+      let result;
+      let lastError: any = null;
+      
+      for (const modelName of modelsToTry) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          result = await model.generateContent(designPrompt);
+          break; // Success, exit loop
+        } catch (err: any) {
+          lastError = err;
+          console.log(`Failed to use ${modelName}, trying next model...`);
+          continue; // Try next model
+        }
+      }
+      
+      if (!result) {
+        throw lastError || new Error("All model attempts failed");
+      }
+      
+      const response = result.response;
       const text = response.text();
       
       // Parse the JSON response
@@ -89,9 +125,19 @@ function AIPageContent() {
         router.push("/cart");
       }, 2000);
       
-    } catch (err) {
+    } catch (err: any) {
       console.error("AI generation error:", err);
-      setError("Failed to generate design. Please try again with a different prompt.");
+      let errorMessage = "Failed to generate design. Please try again with a different prompt.";
+      
+      if (err?.message?.includes("404") || err?.message?.includes("not found")) {
+        errorMessage = "Model not found. Please check your API key has access to Gemini models.";
+      } else if (err?.message?.includes("API key") || err?.message?.includes("403")) {
+        errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+      } else if (err?.message) {
+        errorMessage = `Error: ${err.message}`;
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsGenerating(false);
     }
