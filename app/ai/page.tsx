@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap } from "lucide-react";
+import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap, ArrowLeft } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
@@ -165,6 +165,24 @@ Your designs are always:
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Back to Home Button */}
+      <div className="fixed top-4 left-4 z-40">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Button
+            onClick={() => router.push('/')}
+            variant="ghost"
+            className="bg-black/60 hover:bg-purple-500/20 border border-purple-500/30 text-white backdrop-blur-sm"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+        </motion.div>
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden pt-16 bg-black">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">

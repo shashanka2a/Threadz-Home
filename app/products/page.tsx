@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/context/CartContext";
-import { ShoppingCart, Star, Heart, Zap, X, Plus, Minus, Trash2, CreditCard, Lock, Package, Truck, CheckCircle, Clock, MapPin } from "lucide-react";
+import { ShoppingCart, Star, Heart, Zap, X, Plus, Minus, Trash2, CreditCard, Lock, Package, Truck, CheckCircle, Clock, MapPin, ArrowLeft } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 // Helper function to calculate price based on colors in design
 // Base price: ₹899, +₹100 per additional color (max ₹1299)
@@ -101,6 +102,7 @@ const products = [
 
 export default function ProductsPage() {
   const { items, addItem, updateQuantity, removeItem, clear, total } = useCart();
+  const router = useRouter();
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [likedProducts, setLikedProducts] = useState<Set<string>>(new Set());
   const [showCart, setShowCart] = useState(false);
@@ -210,6 +212,24 @@ export default function ProductsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Back to Home Button */}
+      <div className="fixed top-4 left-4 z-40">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Button
+            onClick={() => router.push('/')}
+            variant="ghost"
+            className="bg-black/60 hover:bg-purple-500/20 border border-purple-500/30 text-white backdrop-blur-sm"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+        </motion.div>
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden pt-16 bg-black">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
