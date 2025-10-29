@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -85,6 +85,8 @@ const products = [
 
 export default function ProductsPage() {
   const { addItem } = useCart();
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [likedProducts, setLikedProducts] = useState<Set<string>>(new Set());
 
   const handleAddToCart = (product: any) => {
     addItem({
@@ -94,27 +96,45 @@ export default function ProductsPage() {
     });
   };
 
+  const toggleLike = (productId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setLikedProducts(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(productId)) {
+        newSet.delete(productId);
+      } else {
+        newSet.add(productId);
+      }
+      return newSet;
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Hero Section */}
       <div className="relative overflow-hidden pt-16">
         <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-950/80 to-violet-900/70" />
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="text-center"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-600/20 text-purple-300 text-sm font-medium mb-6 border border-purple-500/40">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-flex items-center px-4 py-2 rounded-full bg-purple-600/20 text-purple-300 text-sm font-medium mb-6 border border-purple-500/40 backdrop-blur-sm"
+            >
               <Zap className="h-4 w-4 mr-2" />
               Premium Collection
-            </div>
+            </motion.div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
               Explore Our
               <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent"> Collection</span>
             </h1>
-            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-8 opacity-90">
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-8 opacity-90 leading-relaxed">
               Discover unique AI-powered designs crafted for the bold. From viral humor to tech culture, 
               find the perfect style that speaks your language.
             </p>
@@ -123,56 +143,106 @@ export default function ProductsPage() {
       </div>
 
       {/* Products Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
           {products.map((product, index) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 * index }}
+              transition={{ 
+                duration: 0.5, 
+                delay: 0.1 * index,
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              onHoverStart={() => setHoveredCard(product.id)}
+              onHoverEnd={() => setHoveredCard(null)}
             >
-              <div className="group relative overflow-hidden rounded-2xl cursor-pointer bg-gray-900/50 backdrop-blur-sm border border-purple-500/20 hover:border-purple-500/40 transition-all duration-300 hover:shadow-2xl hover:shadow-purple-500/20">
+              <motion.div 
+                className="group relative overflow-hidden rounded-2xl cursor-pointer bg-gray-900/50 backdrop-blur-sm border border-purple-500/20 hover:border-purple-500/50 transition-all duration-300"
+                whileHover={{ y: -8, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                transition={{ duration: 0.2 }}
+              >
                 <div className="relative">
                   <div className="aspect-[3/4] overflow-hidden bg-gray-900">
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
+                    <motion.div
+                      animate={hoveredCard === product.id ? { scale: 1.05 } : { scale: 1 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <Image
+                        src={product.image}
+                        alt={product.name}
+                        width={400}
+                        height={400}
+                        className="w-full h-full object-cover"
+                      />
+                    </motion.div>
                     {/* Dark overlay for text readability */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 opacity-0 group-hover:opacity-70 transition-opacity duration-300" />
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: hoveredCard === product.id ? 0.7 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
                     
                     {/* Neon glow effect */}
-                    <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br ${product.accent} blur-xl`} />
+                    <motion.div 
+                      className={`absolute inset-0 bg-gradient-to-br ${product.accent} blur-xl`}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: hoveredCard === product.id ? 0.2 : 0 }}
+                      transition={{ duration: 0.5 }}
+                    />
                   </div>
-                  <div className="absolute top-4 left-4">
+                  
+                  {/* Badge */}
+                  <motion.div 
+                    className="absolute top-4 left-4"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.1 * index + 0.2 }}
+                  >
                     <Badge 
-                      className="bg-purple-600/90 text-white font-semibold shadow-lg border border-purple-400/50"
+                      className="bg-purple-600/90 text-white font-semibold shadow-lg border border-purple-400/50 backdrop-blur-sm"
                     >
                       {product.badge}
                     </Badge>
-                  </div>
-                  <div className="absolute top-4 right-4">
+                  </motion.div>
+                  
+                  {/* Like Button */}
+                  <motion.div 
+                    className="absolute top-4 right-4"
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: hoveredCard === product.id ? 1 : 0, scale: hoveredCard === product.id ? 1 : 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="w-10 h-10 rounded-full bg-black/60 hover:bg-purple-500/20 border border-purple-500/30 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      onClick={(e) => toggleLike(product.id, e)}
+                      className="w-10 h-10 rounded-full bg-black/60 hover:bg-purple-500/20 border border-purple-500/30 shadow-sm transition-all duration-200"
                     >
-                      <Heart className="h-4 w-4 text-purple-300" />
+                      <motion.div
+                        animate={{ scale: likedProducts.has(product.id) ? [1, 1.2, 1] : 1 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <Heart 
+                          className={`h-4 w-4 transition-colors duration-200 ${
+                            likedProducts.has(product.id) ? 'fill-purple-400 text-purple-400' : 'text-purple-300'
+                          }`} 
+                        />
+                      </motion.div>
                     </Button>
-                  </div>
+                  </motion.div>
                 </div>
                 
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-2">
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center justify-between">
                     <Badge variant="outline" className="text-xs border-purple-500/50 text-purple-300 bg-purple-500/10">
                       {product.category}
                     </Badge>
@@ -187,55 +257,84 @@ export default function ProductsPage() {
                     </div>
                   </div>
                   
-                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors duration-200">
+                  <h3 className="text-xl font-bold text-white group-hover:text-purple-300 transition-colors duration-200">
                     {product.name}
                   </h3>
                   
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-2">
+                  <p className="text-gray-300 text-sm line-clamp-2 leading-relaxed">
                     {product.description}
                   </p>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between pt-2">
                     <div className="text-2xl font-bold text-white">
                       ${product.price}
                     </div>
-                    <Button
-                      onClick={() => handleAddToCart(product)}
-                      className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-200"
+                    <motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
                     >
-                      <ShoppingCart className="h-4 w-4 mr-2" />
-                      Add to Cart
-                    </Button>
+                      <Button
+                        onClick={() => handleAddToCart(product)}
+                        className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-200"
+                      >
+                        <ShoppingCart className="h-4 w-4 mr-2" />
+                        Add to Cart
+                      </Button>
+                    </motion.div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           ))}
         </motion.div>
 
         {/* Call to Action */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="mt-16 text-center"
+          transition={{ duration: 0.6, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-20 lg:mt-24"
         >
-          <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 text-white border-0 shadow-xl rounded-2xl overflow-hidden border border-purple-400/50">
-            <div className="p-12">
-              <h2 className="text-3xl font-bold mb-4">
-                Don't See What You're Looking For?
-              </h2>
-              <p className="text-xl mb-8 opacity-90">
-                Create your own custom design with our AI generator
-              </p>
-              <Button
-                size="lg"
-                className="bg-white text-purple-600 hover:bg-purple-50 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
-                onClick={() => window.location.href = '/ai'}
+          <div className="relative bg-gradient-to-br from-purple-900/30 via-pink-900/20 to-purple-900/30 text-white border border-purple-500/20 shadow-xl rounded-2xl overflow-hidden backdrop-blur-sm">
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 via-pink-600/10 to-red-600/10" />
+            
+            <div className="relative p-8 sm:p-12 lg:p-16">
+              <motion.h2 
+                className="text-3xl sm:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-300 via-pink-300 to-purple-300 bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.5 }}
               >
-                <Zap className="h-5 w-5 mr-2" />
-                Generate Custom Design
-              </Button>
+                Don't See What You're Looking For?
+              </motion.h2>
+              <motion.p 
+                className="text-xl mb-8 opacity-90 leading-relaxed"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.1, duration: 0.5 }}
+              >
+                Create your own custom design with our AI generator
+              </motion.p>
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.2, duration: 0.5 }}
+              >
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <Button
+                    size="lg"
+                    className="bg-white text-purple-600 hover:bg-purple-50 font-semibold shadow-lg hover:shadow-xl hover:shadow-purple-500/30 transition-all duration-200"
+                    onClick={() => window.location.href = '/ai'}
+                  >
+                    <Zap className="h-5 w-5 mr-2" />
+                    Generate Custom Design
+                  </Button>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -243,5 +342,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-
-
