@@ -380,7 +380,7 @@ export default function App() {
                 accent: "from-green-500 to-emerald-500"
               },
               {
-                title: "AI WROTE THIS FIT",
+                title: "COFFEE-N-GPU",
                 subtitle: "",
                 description: "Algorithmic style, human swagger",
                 image: "/coffee-n-gpu.png",
