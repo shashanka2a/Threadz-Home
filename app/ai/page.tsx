@@ -20,7 +20,7 @@ function AIPageContent() {
   const router = useRouter();
   const params = useSearchParams();
 
-      const handleGenerate = useCallback(async () => {
+  const handleGenerate = useCallback(async () => {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
@@ -92,43 +92,48 @@ function AIPageContent() {
     } catch (err) {
       console.error("AI generation error:", err);
       setError("Failed to generate design. Please try again with a different prompt.");
-        } finally {
+    } finally {
       setIsGenerating(false);
     }
-      }, [prompt, addItem, router]);
+  }, [prompt, addItem, router]);
 
-      useEffect(() => {
-        const p = params.get('prompt');
-        if (p && !generatedImage && !isGenerating) {
-          setPrompt(p);
-          // Defer to allow state update before generating
-          setTimeout(() => {
-            void handleGenerate();
-          }, 0);
-        }
-      }, [params, handleGenerate, generatedImage, isGenerating]);
+  useEffect(() => {
+    const p = params.get('prompt');
+    if (p && !generatedImage && !isGenerating) {
+      setPrompt(p);
+      // Defer to allow state update before generating
+      setTimeout(() => {
+        void handleGenerate();
+      }, 0);
+    }
+  }, [params, handleGenerate, generatedImage, isGenerating]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Hero Section */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-blue-600/10"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      <div className="relative overflow-hidden pt-16">
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-950/80 to-violet-900/70" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="text-center"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-100 text-purple-800 text-sm font-medium mb-6">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="inline-flex items-center px-4 py-2 rounded-full bg-purple-600/20 text-purple-300 text-sm font-medium mb-6 border border-purple-500/40 backdrop-blur-sm"
+            >
               <Sparkles className="h-4 w-4 mr-2" />
               Powered by Gemini AI
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            </motion.div>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
               AI Design
-              <span className="bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent"> Generator</span>
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent"> Generator</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-8 opacity-90 leading-relaxed">
               Describe your vision and let AI create custom apparel designs for you. 
               From minimalist to vintage, we bring your ideas to life.
             </p>
@@ -137,155 +142,213 @@ function AIPageContent() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="text-center pb-8">
-              <CardTitle className="text-2xl font-bold text-gray-900 mb-2">
-                Create Your Design
-              </CardTitle>
-              <CardDescription className="text-lg text-gray-600">
-                Enter a detailed description of the design you want to create
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-8">
-              <div>
-                <label htmlFor="prompt" className="block text-sm font-semibold text-gray-700 mb-3">
-                  Design Description
-                </label>
-                <Textarea
-                  id="prompt"
-                  placeholder="e.g., A minimalist mountain landscape with geometric shapes in navy blue and white, perfect for a hiking t-shirt..."
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  rows={4}
-                  className="w-full text-lg border-gray-200 focus:border-purple-500 focus:ring-purple-500"
-                />
+          <div className="relative bg-gray-900/50 backdrop-blur-sm border border-purple-500/20 rounded-2xl shadow-xl overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-pink-900/10 to-purple-900/10" />
+            
+            <div className="relative p-6 sm:p-8 lg:p-12">
+              <div className="text-center mb-8">
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+                  Create Your Design
+                </h2>
+                <p className="text-lg text-purple-200 opacity-90">
+                  Enter a detailed description of the design you want to create
+                </p>
               </div>
+              
+              <div className="space-y-6">
+                <div>
+                  <label htmlFor="prompt" className="block text-sm font-semibold text-purple-200 mb-3">
+                    Design Description
+                  </label>
+                  <motion.div
+                    whileFocus={{ scale: 1.01 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Textarea
+                      id="prompt"
+                      placeholder="e.g., A minimalist mountain landscape with geometric shapes in navy blue and white, perfect for a hiking t-shirt..."
+                      value={prompt}
+                      onChange={(e) => setPrompt(e.target.value)}
+                      rows={4}
+                      className="w-full text-lg bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400 rounded-xl transition-all duration-200"
+                    />
+                  </motion.div>
+                </div>
 
-              {error && (
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700"
-                >
-                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
-                  <span className="font-medium">{error}</span>
-                </motion.div>
-              )}
-
-              <Button
-                onClick={handleGenerate}
-                disabled={!prompt.trim() || isGenerating}
-                className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                {isGenerating ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
-                    Generating with AI...
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="h-5 w-5 mr-3" />
-                    Generate Design
-                  </>
+                {error && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="flex items-center gap-3 p-4 bg-red-900/30 border border-red-500/50 rounded-xl text-red-300 backdrop-blur-sm"
+                  >
+                    <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                    <span className="font-medium">{error}</span>
+                  </motion.div>
                 )}
-              </Button>
 
-              {generatedImage && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="p-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl"
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ duration: 0.2 }}
                 >
-                  <h3 className="font-semibold text-gray-900 mb-4 text-lg">Generated Design Preview</h3>
-                  <div className="flex items-center gap-6">
-                    <div className="relative">
-                      <Image 
-                        src={generatedImage} 
-                        alt="Generated design" 
-                        width={120}
-                        height={120}
-                        className="w-30 h-30 object-cover rounded-xl border-2 border-white shadow-lg"
-                      />
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                        <Sparkles className="h-3 w-3 text-white" />
+                  <Button
+                    onClick={handleGenerate}
+                    disabled={!prompt.trim() || isGenerating}
+                    className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isGenerating ? (
+                      <>
+                        <motion.div 
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="rounded-full h-5 w-5 border-b-2 border-white mr-3"
+                        />
+                        Generating with AI...
+                      </>
+                    ) : (
+                      <>
+                        <Wand2 className="h-5 w-5 mr-3" />
+                        Generate Design
+                      </>
+                    )}
+                  </Button>
+                </motion.div>
+
+                {generatedImage && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    className="p-6 bg-gradient-to-br from-green-900/30 via-blue-900/20 to-green-900/30 border border-green-500/30 rounded-xl backdrop-blur-sm"
+                  >
+                    <h3 className="font-semibold text-white mb-4 text-lg flex items-center gap-2">
+                      <Sparkles className="h-5 w-5 text-green-400" />
+                      Generated Design Preview
+                    </h3>
+                    <div className="flex items-center gap-6">
+                      <motion.div 
+                        className="relative"
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                      >
+                        <Image 
+                          src={generatedImage} 
+                          alt="Generated design" 
+                          width={120}
+                          height={120}
+                          className="w-30 h-30 object-cover rounded-xl border-2 border-purple-500/50 shadow-lg"
+                        />
+                        <motion.div 
+                          className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                        >
+                          <Sparkles className="h-3 w-3 text-white" />
+                        </motion.div>
+                      </motion.div>
+                      <div className="flex-1">
+                        <p className="text-purple-100 font-medium mb-2">
+                          Design generated successfully! Added to your cart.
+                        </p>
+                        <p className="text-sm text-gray-400">
+                          Redirecting to cart in a moment...
+                        </p>
                       </div>
                     </div>
-                    <div className="flex-1">
-                      <p className="text-gray-700 font-medium mb-2">
-                        Design generated successfully! Added to your cart.
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        Redirecting to cart in a moment...
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
+                  </motion.div>
+                )}
 
-              {prompt.trim() && !generatedImage && !isGenerating && (
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="p-6 bg-gray-50 rounded-xl border border-gray-200"
-                >
-                  <h3 className="font-semibold text-gray-900 mb-3">Preview</h3>
-                  <p className="text-gray-600">
-                    You're about to generate: <span className="font-semibold text-purple-600">"{prompt}"</span>
-                  </p>
-                </motion.div>
-              )}
-            </CardContent>
-          </Card>
+                {prompt.trim() && !generatedImage && !isGenerating && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                    className="p-6 bg-gray-900/50 border border-purple-500/20 rounded-xl backdrop-blur-sm"
+                  >
+                    <h3 className="font-semibold text-white mb-3">Preview</h3>
+                    <p className="text-gray-300">
+                      You're about to generate: <span className="font-semibold text-purple-300">"{prompt}"</span>
+                    </p>
+                  </motion.div>
+                )}
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Features Grid */}
         <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
+          className="mt-16 lg:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
         >
-          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-gradient-to-r from-purple-100 to-purple-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Wand2 className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">AI-Powered</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Advanced Gemini AI technology creates unique designs based on your description
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <ShoppingCart className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Instant Order</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Generated designs are automatically added to your cart for purchase
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="text-center p-8 border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-            <CardContent className="p-0">
-              <div className="w-16 h-16 bg-gradient-to-r from-green-100 to-green-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <Palette className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">Custom Quality</h3>
-              <p className="text-gray-600 leading-relaxed">
-                High-quality prints on premium apparel with fast shipping
-              </p>
-            </CardContent>
-          </Card>
+          {[
+            {
+              icon: Wand2,
+              title: "AI-Powered",
+              description: "Advanced Gemini AI technology creates unique designs based on your description",
+              gradient: "from-purple-600/20 to-pink-600/20",
+              iconColor: "text-purple-400",
+              borderColor: "border-purple-500/30"
+            },
+            {
+              icon: ShoppingCart,
+              title: "Instant Order",
+              description: "Generated designs are automatically added to your cart for purchase",
+              gradient: "from-blue-600/20 to-cyan-600/20",
+              iconColor: "text-blue-400",
+              borderColor: "border-blue-500/30"
+            },
+            {
+              icon: Palette,
+              title: "Custom Quality",
+              description: "High-quality prints on premium apparel with fast shipping",
+              gradient: "from-green-600/20 to-emerald-600/20",
+              iconColor: "text-green-400",
+              borderColor: "border-green-500/30"
+            }
+          ].map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.5 + index * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <motion.div
+                  className={`relative text-center p-8 bg-gray-900/50 backdrop-blur-sm border ${feature.borderColor} rounded-2xl hover:border-opacity-60 transition-all duration-300`}
+                  whileHover={{ y: -8, scale: 1.02 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`} />
+                  <div className="relative">
+                    <motion.div 
+                      className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 border ${feature.borderColor}`}
+                      whileHover={{ rotate: 360, scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    >
+                      <Icon className={`h-8 w-8 ${feature.iconColor}`} />
+                    </motion.div>
+                    <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                    <p className="text-gray-300 leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </div>
+                </motion.div>
+              </motion.div>
+            );
+          })}
         </motion.div>
       </div>
     </div>
@@ -295,10 +358,14 @@ function AIPageContent() {
 export default function AIPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading AI Design Lab...</p>
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto mb-4"
+          />
+          <p className="text-purple-200">Loading AI Design Lab...</p>
         </div>
       </div>
     }>
@@ -306,5 +373,3 @@ export default function AIPage() {
     </Suspense>
   );
 }
-
-
