@@ -58,7 +58,7 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/threadz-logo.png" alt="Threadz" width={28} height={28} />
+            <img src="/threadz.png" alt="Threadz" width={56} height={56} className="object-contain" />
             <h1 className="logo-text">Threadz.studio</h1>
           </div>
           <button 

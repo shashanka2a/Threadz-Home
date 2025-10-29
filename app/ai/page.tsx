@@ -11,7 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap, ArrowLeft, X, CheckCircle, Plus, Minus, Trash2, CreditCard, Lock, Package, Truck, Clock, MapPin } from "lucide-react";
+import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap, ArrowLeft, X, CheckCircle, Plus, Minus, Trash2, CreditCard, Lock, Package, Truck, Clock, MapPin, Edit, RefreshCw } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
@@ -26,10 +26,13 @@ function calculatePriceBasedOnColors(colors: string[]): number {
 
 function AIPageContent() {
   const [prompt, setPrompt] = useState("");
+  const [originalPrompt, setOriginalPrompt] = useState("");
+  const [editedPrompt, setEditedPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
   const [generatedImage, setGeneratedImage] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showEditPromptModal, setShowEditPromptModal] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const [showContactInfo, setShowContactInfo] = useState(false);
   const [showCheckout, setShowCheckout] = useState(false);
@@ -100,8 +103,13 @@ Your designs are always:
 
       Make it creative, trendy, and perfect for apparel printing. The design should be bold, memorable, and aligned with streetwear culture.`;
 
-      // Try different models in order of preference
-      const modelsToTry = ["gemini-2.0-flash-exp", "gemini-1.5-flash", "gemini-pro"];
+      // Try different models in order of preference with retry logic for rate limits
+      const modelsToTry = [
+        "gemini-1.5-flash",
+        "gemini-1.5-pro", 
+        "gemini-1.0-pro",
+        "gemini-pro"
+      ];
       let result;
       let lastError: any = null;
       
@@ -112,13 +120,39 @@ Your designs are always:
           break; // Success, exit loop
         } catch (err: any) {
           lastError = err;
-          console.log(`Failed to use ${modelName}, trying next model...`);
-          continue; // Try next model
+          const errorMessage = err?.message || err?.toString() || '';
+          
+          // If rate limited (429), wait and retry once
+          if (errorMessage.includes('429') || err?.status === 429) {
+            console.log(`Rate limit hit for ${modelName}, waiting 2 seconds before next model...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          // If model not found (404), skip to next
+          if (errorMessage.includes('404') || err?.status === 404) {
+            console.log(`Model ${modelName} not found, trying next model...`);
+            continue;
+          }
+          
+          // For other errors, log and try next model
+          console.log(`Failed to use ${modelName}: ${errorMessage}, trying next model...`);
+          continue;
         }
       }
       
       if (!result) {
-        throw lastError || new Error("All model attempts failed");
+        // Provide more helpful error message
+        let errorMessage = "Failed to generate design. Please try again.";
+        if (lastError?.message?.includes("429") || lastError?.status === 429) {
+          errorMessage = "Rate limit exceeded. Please wait a moment and try again.";
+        } else if (lastError?.message?.includes("404") || lastError?.status === 404) {
+          errorMessage = "API models not available. Please check your API key configuration.";
+        } else if (lastError?.message?.includes("API key") || lastError?.status === 403) {
+          errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+        } else if (lastError?.message) {
+          errorMessage = `Error: ${lastError.message}`;
+        }
+        throw new Error(errorMessage);
       }
       
       const response = result.response;
@@ -158,6 +192,7 @@ Your designs are always:
       
       addItem(design);
       setGeneratedDesign(design);
+      setOriginalPrompt(prompt); // Store the original prompt
       
       // Show success modal
       setShowSuccessModal(true);
@@ -166,8 +201,10 @@ Your designs are always:
       console.error("AI generation error:", err);
       let errorMessage = "Failed to generate design. Please try again with a different prompt.";
       
-      if (err?.message?.includes("404") || err?.message?.includes("not found")) {
-        errorMessage = "Model not found. Please check your API key has access to Gemini models.";
+      if (err?.message?.includes("429") || err?.status === 429) {
+        errorMessage = "Rate limit exceeded. Please wait a moment and try again.";
+      } else if (err?.message?.includes("404") || err?.message?.includes("not found")) {
+        errorMessage = "API models not available. Please check your API key configuration.";
       } else if (err?.message?.includes("API key") || err?.message?.includes("403")) {
         errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
       } else if (err?.message) {
@@ -178,7 +215,308 @@ Your designs are always:
     } finally {
       setIsGenerating(false);
     }
-  }, [prompt, addItem, router]);
+  }, [prompt, addItem, router, removeItem, items]);
+
+  const handleRegenerate = useCallback(async () => {
+    // Regenerate with the same prompt
+    setShowSuccessModal(false);
+    setIsGenerating(true);
+    setError("");
+    setGeneratedImage("");
+    
+    // Use the original prompt for regeneration
+    const promptToUse = originalPrompt || prompt;
+    
+    try {
+      const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyAp8K90rlwgddEUzPbZQB0u8qLATmODdW4");
+      
+      const expertContext = `You are a 150 IQ graphic designer with 20+ years of experience in streetwear and apparel design. You have an exceptional understanding of:
+- Modern design trends and viral aesthetics
+- Typography, color theory, and visual hierarchy
+- What makes designs print-ready and visually striking
+- Gen-Z and tech culture humor and references
+- Minimalist, bold, and expressive design styles
+
+Your designs are always:
+- Print-ready and high-quality
+- Trendy and relevant to current culture
+- Visually balanced and aesthetically pleasing
+- Suitable for t-shirt printing and apparel
+- Unique and creative, never generic
+
+`;
+
+      const designPrompt = `${expertContext}Create a detailed design description for a t-shirt based on this user request: "${promptToUse}"
+
+      Respond with a JSON object containing:
+      {
+        "title": "Creative, catchy title for the design (max 5 words)",
+        "description": "Engaging description that captures the design's vibe and appeal",
+        "style": "Design style (minimalist, vintage, modern, geometric, abstract, urban, tech, etc.)",
+        "colors": ["primary color", "secondary color"],
+        "imagePrompt": "Detailed visual description of how this design would look as a t-shirt graphic"
+      }
+
+      Make it creative, trendy, and perfect for apparel printing. The design should be bold, memorable, and aligned with streetwear culture.`;
+
+      const modelsToTry = [
+        "gemini-1.5-flash",
+        "gemini-1.5-pro", 
+        "gemini-1.0-pro",
+        "gemini-pro"
+      ];
+      let result;
+      let lastError: any = null;
+      
+      for (const modelName of modelsToTry) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          result = await model.generateContent(designPrompt);
+          break;
+        } catch (err: any) {
+          lastError = err;
+          const errorMessage = err?.message || err?.toString() || '';
+          
+          // If rate limited (429), wait and retry once
+          if (errorMessage.includes('429') || err?.status === 429) {
+            console.log(`Rate limit hit for ${modelName}, waiting 2 seconds before next model...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          // If model not found (404), skip to next
+          if (errorMessage.includes('404') || err?.status === 404) {
+            console.log(`Model ${modelName} not found, trying next model...`);
+            continue;
+          }
+          
+          console.log(`Failed to use ${modelName}: ${errorMessage}, trying next model...`);
+          continue;
+        }
+      }
+      
+      if (!result) {
+        let errorMessage = "Failed to regenerate design. Please try again.";
+        if (lastError?.message?.includes("429") || lastError?.status === 429) {
+          errorMessage = "Rate limit exceeded. Please wait a moment and try again.";
+        } else if (lastError?.message?.includes("404") || lastError?.status === 404) {
+          errorMessage = "API models not available. Please check your API key configuration.";
+        } else if (lastError?.message?.includes("API key") || lastError?.status === 403) {
+          errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+        } else if (lastError?.message) {
+          errorMessage = `Error: ${lastError.message}`;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const response = result.response;
+      const text = response.text();
+      const designData = JSON.parse(text.replace(/```json\n?|\n?```/g, ''));
+      
+      const getImageUrl = (style: string) => {
+        const styleImages: Record<string, string> = {
+          'minimalist': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format',
+          'vintage': 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=400&fit=crop&q=80&auto=format',
+          'modern': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'geometric': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format',
+          'nature': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'abstract': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format'
+        };
+        return styleImages[style.toLowerCase()] || styleImages['modern'];
+      };
+      
+      const imageUrl = getImageUrl(designData.style);
+      setGeneratedImage(imageUrl);
+      
+      const design = {
+        id: `design-${Date.now()}`,
+        name: designData.title,
+        price: calculatePriceBasedOnColors(designData.colors || []),
+        image: imageUrl,
+        description: designData.description,
+        style: designData.style,
+        colors: designData.colors,
+        type: "ai-generated",
+        originalPrompt: promptToUse
+      };
+      
+      // Replace the last item in cart with new design
+      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
+        removeItem(items[items.length - 1].id);
+      }
+      addItem(design);
+      setGeneratedDesign(design);
+      setOriginalPrompt(promptToUse);
+      setShowSuccessModal(true);
+      
+    } catch (err: any) {
+      console.error("AI regeneration error:", err);
+      let errorMessage = "Failed to regenerate design. Please try again.";
+      if (err?.message?.includes("429") || err?.status === 429) {
+        errorMessage = "Rate limit exceeded. Please wait a moment and try again.";
+      } else if (err?.message?.includes("404") || err?.status === 404) {
+        errorMessage = "API models not available. Please check your API key configuration.";
+      } else if (err?.message?.includes("API key") || err?.status === 403) {
+        errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+      } else if (err?.message) {
+        errorMessage = `Error: ${err.message}`;
+      }
+      setError(errorMessage);
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [originalPrompt, prompt, addItem, removeItem, items]);
+
+  const handleEditPrompt = () => {
+    setEditedPrompt(originalPrompt || prompt);
+    setShowSuccessModal(false);
+    setShowEditPromptModal(true);
+  };
+
+  const handleEditPromptSubmit = async () => {
+    if (!editedPrompt.trim()) return;
+    setPrompt(editedPrompt);
+    setShowEditPromptModal(false);
+    setIsGenerating(true);
+    setError("");
+    setGeneratedImage("");
+    
+    // Trigger generation with edited prompt
+    const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || "AIzaSyAp8K90rlwgddEUzPbZQB0u8qLATmODdW4");
+    
+    try {
+      const expertContext = `You are a 150 IQ graphic designer with 20+ years of experience in streetwear and apparel design. You have an exceptional understanding of:
+- Modern design trends and viral aesthetics
+- Typography, color theory, and visual hierarchy
+- What makes designs print-ready and visually striking
+- Gen-Z and tech culture humor and references
+- Minimalist, bold, and expressive design styles
+
+Your designs are always:
+- Print-ready and high-quality
+- Trendy and relevant to current culture
+- Visually balanced and aesthetically pleasing
+- Suitable for t-shirt printing and apparel
+- Unique and creative, never generic
+
+`;
+
+      const designPrompt = `${expertContext}Create a detailed design description for a t-shirt based on this user request: "${editedPrompt}"
+
+      Respond with a JSON object containing:
+      {
+        "title": "Creative, catchy title for the design (max 5 words)",
+        "description": "Engaging description that captures the design's vibe and appeal",
+        "style": "Design style (minimalist, vintage, modern, geometric, abstract, urban, tech, etc.)",
+        "colors": ["primary color", "secondary color"],
+        "imagePrompt": "Detailed visual description of how this design would look as a t-shirt graphic"
+      }
+
+      Make it creative, trendy, and perfect for apparel printing. The design should be bold, memorable, and aligned with streetwear culture.`;
+
+      const modelsToTry = [
+        "gemini-1.5-flash",
+        "gemini-1.5-pro", 
+        "gemini-1.0-pro",
+        "gemini-pro"
+      ];
+      let result;
+      let lastError: any = null;
+      
+      for (const modelName of modelsToTry) {
+        try {
+          const model = genAI.getGenerativeModel({ model: modelName });
+          result = await model.generateContent(designPrompt);
+          break;
+        } catch (err: any) {
+          lastError = err;
+          const errorMessage = err?.message || err?.toString() || '';
+          
+          // If rate limited (429), wait and retry once
+          if (errorMessage.includes('429') || err?.status === 429) {
+            console.log(`Rate limit hit for ${modelName}, waiting 2 seconds before next model...`);
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          // If model not found (404), skip to next
+          if (errorMessage.includes('404') || err?.status === 404) {
+            console.log(`Model ${modelName} not found, trying next model...`);
+            continue;
+          }
+          
+          console.log(`Failed to use ${modelName}: ${errorMessage}, trying next model...`);
+          continue;
+        }
+      }
+      
+      if (!result) {
+        let errorMessage = "Failed to generate design. Please try again.";
+        if (lastError?.message?.includes("429") || lastError?.status === 429) {
+          errorMessage = "Rate limit exceeded. Please wait a moment and try again.";
+        } else if (lastError?.message?.includes("404") || lastError?.status === 404) {
+          errorMessage = "API models not available. Please check your API key configuration.";
+        } else if (lastError?.message?.includes("API key") || lastError?.status === 403) {
+          errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+        } else if (lastError?.message) {
+          errorMessage = `Error: ${lastError.message}`;
+        }
+        throw new Error(errorMessage);
+      }
+      
+      const response = result.response;
+      const text = response.text();
+      const designData = JSON.parse(text.replace(/```json\n?|\n?```/g, ''));
+      
+      const getImageUrl = (style: string) => {
+        const styleImages: Record<string, string> = {
+          'minimalist': 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format',
+          'vintage': 'https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=400&fit=crop&q=80&auto=format',
+          'modern': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'geometric': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format',
+          'nature': 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop&q=80&auto=format',
+          'abstract': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format'
+        };
+        return styleImages[style.toLowerCase()] || styleImages['modern'];
+      };
+      
+      const imageUrl = getImageUrl(designData.style);
+      setGeneratedImage(imageUrl);
+      
+      const design = {
+        id: `design-${Date.now()}`,
+        name: designData.title,
+        price: calculatePriceBasedOnColors(designData.colors || []),
+        image: imageUrl,
+        description: designData.description,
+        style: designData.style,
+        colors: designData.colors,
+        type: "ai-generated",
+        originalPrompt: editedPrompt
+      };
+      
+      // Replace the last item in cart with new design
+      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
+        removeItem(items[items.length - 1].id);
+      }
+      addItem(design);
+      setGeneratedDesign(design);
+      setOriginalPrompt(editedPrompt);
+      setShowSuccessModal(true);
+      
+    } catch (err: any) {
+      console.error("AI generation error:", err);
+      let errorMessage = "Failed to generate design. Please try again with a different prompt.";
+      if (err?.message?.includes("404") || err?.message?.includes("not found")) {
+        errorMessage = "Model not found. Please check your API key has access to Gemini models.";
+      } else if (err?.message?.includes("API key") || err?.message?.includes("403")) {
+        errorMessage = "Invalid API key. Please check your Gemini API key configuration.";
+      } else if (err?.message) {
+        errorMessage = `Error: ${err.message}`;
+      }
+      setError(errorMessage);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleInputChange = (field: string, value: string) => {
     setPaymentData(prev => ({ ...prev, [field]: value }));
@@ -577,6 +915,25 @@ Your designs are always:
                         <ShoppingCart className="h-5 w-5 mr-2" />
                         View Cart
                       </Button>
+                      <div className="grid grid-cols-2 gap-3">
+                        <Button
+                          variant="outline"
+                          onClick={handleRegenerate}
+                          disabled={isGenerating}
+                          className="border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
+                        >
+                          <RefreshCw className={`h-4 w-4 mr-2 ${isGenerating ? 'animate-spin' : ''}`} />
+                          Regenerate
+                        </Button>
+                        <Button
+                          variant="outline"
+                          onClick={handleEditPrompt}
+                          className="border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
+                        >
+                          <Edit className="h-4 w-4 mr-2" />
+                          Edit Prompt
+                        </Button>
+                      </div>
                       <Button
                         variant="outline"
                         onClick={() => {
@@ -584,6 +941,7 @@ Your designs are always:
                           setPrompt("");
                           setGeneratedImage("");
                           setGeneratedDesign(null);
+                          setOriginalPrompt("");
                         }}
                         className="w-full border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
                       >
@@ -961,6 +1319,94 @@ Your designs are always:
                           <>
                             <Lock className="h-5 w-5 mr-2" />
                             Confirm Payment
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Edit Prompt Modal */}
+      <AnimatePresence>
+        {showEditPromptModal && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+              onClick={() => setShowEditPromptModal(false)}
+            />
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-[500px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl overflow-y-auto pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Edit Prompt
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowEditPromptModal(false)}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                    <div>
+                      <Label className="text-purple-300 mb-2 block">Design Description</Label>
+                      <Textarea
+                        placeholder="e.g., A minimalist mountain landscape with geometric shapes in navy blue and white, perfect for a hiking t-shirt..."
+                        value={editedPrompt}
+                        onChange={(e) => setEditedPrompt(e.target.value)}
+                        rows={6}
+                        className="w-full text-lg bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400 rounded-xl transition-all duration-200"
+                      />
+                      <p className="text-xs text-gray-400 mt-2">
+                        Modify your prompt to generate a different design
+                      </p>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <Button
+                        variant="outline"
+                        onClick={() => setShowEditPromptModal(false)}
+                        className="flex-1 border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handleEditPromptSubmit}
+                        disabled={!editedPrompt.trim() || isGenerating}
+                        className="flex-1 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white h-12 text-lg font-semibold disabled:opacity-50"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <motion.div 
+                              animate={{ rotate: 360 }}
+                              transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                              className="rounded-full h-5 w-5 border-b-2 border-white mr-2"
+                            />
+                            Generating...
+                          </>
+                        ) : (
+                          <>
+                            <Wand2 className="h-5 w-5 mr-2" />
+                            Generate with Edited Prompt
                           </>
                         )}
                       </Button>
