@@ -56,6 +56,30 @@ const products = [
     reviews: 78,
     badge: "Limited",
     accent: "from-purple-500 to-pink-500"
+  },
+  {
+    id: "5",
+    name: "404 ERROR",
+    price: 29.99,
+    image: "/404-error.png",
+    description: "Page not found, but style always found",
+    category: "Dev Life",
+    rating: 4.8,
+    reviews: 142,
+    badge: "Popular",
+    accent: "from-orange-500 to-red-500"
+  },
+  {
+    id: "6",
+    name: "LOW LATENCY",
+    price: 31.99,
+    image: "/low-latency.png",
+    description: "Fast response times, instant style",
+    category: "Tech Culture",
+    rating: 4.9,
+    reviews: 98,
+    badge: "Hot",
+    accent: "from-cyan-500 to-blue-500"
   }
 ];
 
