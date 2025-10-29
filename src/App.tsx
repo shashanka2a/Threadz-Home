@@ -31,13 +31,14 @@ const staggerContainer: Variants = {
 };
 
 // Animated section wrapper with reduced motion support
-function AnimatedSection({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+function AnimatedSection({ children, className = "", id }: { children: React.ReactNode, className?: string, id?: string }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   
   return (
     <motion.div
       ref={ref}
+      id={id}
       initial="hidden"
       animate={isInView ? "visible" : "hidden"}
       variants={fadeInUp}
@@ -70,12 +71,119 @@ export default function App() {
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
           <div className="hidden md:flex gap-6 items-center">
-            <a href="#designs" className="nav-link">Designs</a>
-            <a href="#create" className="nav-link">Create</a>
-            <a href="#ai-lab" className="nav-link">AI Lab</a>
+            <a 
+              href="#designs" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById('designs');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              Designs
+            </a>
+            <a 
+              href="#create" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById('create');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              Create
+            </a>
+            <a 
+              href="#ai-lab" 
+              className="nav-link"
+              onClick={(e) => {
+                e.preventDefault();
+                const section = document.getElementById('ai-lab');
+                if (section) {
+                  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              }}
+            >
+              AI Lab
+            </a>
             <Button size="sm" className="bg-purple-600 hover:bg-purple-700" onClick={() => router.push('/products')}>Shop</Button>
           </div>
         </div>
+        
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="md:hidden border-t border-purple-500/20 bg-black/95 backdrop-blur-md"
+          >
+            <div className="px-4 py-4 space-y-3">
+              <a
+                href="#designs"
+                className="block px-4 py-3 rounded-lg hover:bg-purple-500/10 transition-colors nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  const section = document.getElementById('designs');
+                  if (section) {
+                    setTimeout(() => {
+                      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }
+                }}
+              >
+                Designs
+              </a>
+              <a
+                href="#create"
+                className="block px-4 py-3 rounded-lg hover:bg-purple-500/10 transition-colors nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  const section = document.getElementById('create');
+                  if (section) {
+                    setTimeout(() => {
+                      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }
+                }}
+              >
+                Create
+              </a>
+              <a
+                href="#ai-lab"
+                className="block px-4 py-3 rounded-lg hover:bg-purple-500/10 transition-colors nav-link"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  const section = document.getElementById('ai-lab');
+                  if (section) {
+                    setTimeout(() => {
+                      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }
+                }}
+              >
+                AI Lab
+              </a>
+              <Button 
+                size="sm" 
+                className="w-full bg-purple-600 hover:bg-purple-700" 
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  router.push('/products');
+                }}
+              >
+                Shop
+              </Button>
+            </div>
+          </motion.div>
+        )}
       </nav>
 
       {/* Hero Section - Optimized for mobile */}
@@ -174,7 +282,7 @@ export default function App() {
       </section>
 
       {/* Section 1 - Create. Customize. Cop. */}
-      <AnimatedSection className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-black to-gray-950">
+      <AnimatedSection id="create" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-black to-gray-950">
         <div className="max-w-7xl mx-auto">
           <h2 className="section-heading mb-12 sm:mb-16 text-center">
             Create. Customize. Cop.
@@ -260,7 +368,7 @@ export default function App() {
       </AnimatedSection>
 
       {/* Section 2 - AI Design Lab */}
-      <AnimatedSection className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-gray-950 to-black">
+      <AnimatedSection id="ai-lab" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-gray-950 to-black">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-10 sm:mb-12">
             <div className="inline-block bg-purple-600/20 text-purple-300 px-4 py-2 rounded-full mb-4 border border-purple-500/40">
@@ -344,7 +452,7 @@ export default function App() {
       </AnimatedSection>
 
       {/* Section 3 - AI Meets Streetwear */}
-      <AnimatedSection className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-[#0B0B0F]" data-section="streetwear">
+      <AnimatedSection id="designs" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-[#0B0B0F]" data-section="streetwear">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
