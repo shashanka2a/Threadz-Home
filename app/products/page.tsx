@@ -185,12 +185,27 @@ export default function ProductsPage() {
 
   const isFormValid = paymentData.cardNumber && paymentData.expiryDate && paymentData.cvv && paymentData.name && paymentData.email && paymentData.address && paymentData.city && paymentData.zipCode;
 
+  // Helper function to format dates dynamically
+  const formatTrackingDate = (daysFromNow: number) => {
+    const today = new Date();
+    const targetDate = new Date(today);
+    targetDate.setDate(today.getDate() + daysFromNow);
+    
+    if (daysFromNow === 0) return "Today";
+    if (daysFromNow === 1) return "Tomorrow";
+    
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const day = targetDate.getDate();
+    const month = months[targetDate.getMonth()];
+    return `${month} ${day}`;
+  };
+
   const trackingSteps = [
-    { id: 1, title: "Order Confirmed", description: "Your order has been received", status: "completed", date: "Today", time: "Now", icon: CheckCircle },
-    { id: 2, title: "Processing", description: "Items being prepared", status: "completed", date: "Today", time: "Now", icon: Package },
-    { id: 3, title: "Shipped", description: "Order shipped", status: "pending", date: "Tomorrow", time: "9:00 AM", icon: Truck },
-    { id: 4, title: "Out for Delivery", description: "Package out for delivery", status: "pending", date: "Dec 28", time: "8:00 AM", icon: Truck },
-    { id: 5, title: "Delivered", description: "Package delivered", status: "pending", date: "Dec 28", time: "2:00 PM", icon: MapPin }
+    { id: 1, title: "Order Confirmed", description: "Your order has been received", status: "completed", date: formatTrackingDate(0), time: "Now", icon: CheckCircle },
+    { id: 2, title: "Processing", description: "Items being prepared", status: "completed", date: formatTrackingDate(0), time: "Now", icon: Package },
+    { id: 3, title: "Shipped", description: "Order shipped", status: "pending", date: formatTrackingDate(1), time: "9:00 AM", icon: Truck },
+    { id: 4, title: "Out for Delivery", description: "Package out for delivery", status: "pending", date: formatTrackingDate(2), time: "8:00 AM", icon: Truck },
+    { id: 5, title: "Delivered", description: "Package delivered", status: "pending", date: formatTrackingDate(2), time: "2:00 PM", icon: MapPin }
   ];
 
   return (

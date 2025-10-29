@@ -8,13 +8,28 @@ import { Badge } from "@/components/ui/badge";
 import { useParams, useRouter } from "next/navigation";
 import { Package, Truck, CheckCircle, Clock, MapPin, Home, RefreshCw } from "lucide-react";
 
+// Helper function to format dates dynamically
+const formatTrackingDate = (daysFromNow: number) => {
+  const today = new Date();
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() + daysFromNow);
+  
+  if (daysFromNow === 0) return "Today";
+  if (daysFromNow === 1) return "Tomorrow";
+  
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const day = targetDate.getDate();
+  const month = months[targetDate.getMonth()];
+  return `${month} ${day}`;
+};
+
 const trackingSteps = [
   {
     id: 1,
     title: "Order Confirmed",
     description: "Your order has been received and confirmed",
     status: "completed",
-    date: "Today",
+    date: formatTrackingDate(0),
     time: "2:30 PM",
     icon: CheckCircle,
     color: "green"
@@ -24,7 +39,7 @@ const trackingSteps = [
     title: "Processing",
     description: "Your items are being prepared for shipment",
     status: "completed",
-    date: "Today",
+    date: formatTrackingDate(0),
     time: "3:45 PM",
     icon: Package,
     color: "blue"
@@ -34,7 +49,7 @@ const trackingSteps = [
     title: "Shipped",
     description: "Your order has been shipped and is on its way",
     status: "completed",
-    date: "Tomorrow",
+    date: formatTrackingDate(1),
     time: "9:00 AM",
     icon: Truck,
     color: "purple"
@@ -44,7 +59,7 @@ const trackingSteps = [
     title: "Out for Delivery",
     description: "Your package is out for delivery",
     status: "current",
-    date: "Dec 28",
+    date: formatTrackingDate(2),
     time: "8:00 AM",
     icon: Truck,
     color: "orange"
@@ -54,7 +69,7 @@ const trackingSteps = [
     title: "Delivered",
     description: "Your package has been delivered",
     status: "pending",
-    date: "Dec 28",
+    date: formatTrackingDate(2),
     time: "2:00 PM",
     icon: MapPin,
     color: "green"
