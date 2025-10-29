@@ -6,14 +6,14 @@ export const metadata: Metadata = {
   title: 'Threadz.studio',
   description: 'AI apparel creation and designs.',
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/threadz-logo.png',
-    apple: '/threadz-logo.png',
+    icon: '/threadz.png',
+    shortcut: '/threadz.png',
+    apple: '/threadz.png',
   },
   openGraph: {
     title: 'Threadz.studio',
     description: 'AI apparel creation and designs.',
-    images: ['/threadz-logo.png'],
+    images: ['/threadz.png'],
   },
 };
 
