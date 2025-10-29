@@ -188,7 +188,7 @@ export default function App() {
             >
               <div className="aspect-square relative bg-gradient-to-br from-purple-900/20 to-pink-900/20">
                 <ImageWithFallback
-                  src="/ai-fit.png"
+                  src="/coffee-n-gpu.png"
                   alt="Custom T-shirt design"
                   className="w-full h-full object-cover rounded-2xl"
                 />
@@ -383,7 +383,7 @@ export default function App() {
                 title: "AI WROTE THIS FIT",
                 subtitle: "",
                 description: "Algorithmic style, human swagger",
-                image: "/ai-fit.png",
+                image: "/coffee-n-gpu.png",
                 accent: "from-purple-500 to-pink-500"
               }
             ].map((shirt, idx) => (
@@ -402,14 +402,14 @@ export default function App() {
                     className="w-full h-full object-cover"
                   />
                   
-                  {/* Dark overlay for text readability */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
+                  {/* Dark overlay for text readability (intensifies on hover) */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 opacity-0 group-hover:opacity-90 transition-opacity duration-300" />
                   
                   {/* Neon glow effect */}
                   <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br ${shirt.accent} blur-xl`} />
                   
-                  {/* Main content */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                  {/* Main content (reveals on hover) */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
                     <h3 className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tight leading-tight">
                       {shirt.title}
                     </h3>
