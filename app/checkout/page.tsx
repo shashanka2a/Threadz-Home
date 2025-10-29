@@ -44,10 +44,10 @@ export default function CheckoutPage() {
   const isFormValid = formData.cardNumber && formData.expiryDate && formData.cvv && formData.name && formData.email && formData.address && formData.city && formData.zipCode;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-red-600/10"></div>
+      <div className="relative overflow-hidden pt-16 bg-black">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -55,15 +55,15 @@ export default function CheckoutPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-100 text-orange-800 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-600/20 text-purple-300 text-sm font-medium mb-6 border border-purple-500/40 backdrop-blur-sm">
               <Lock className="h-4 w-4 mr-2" />
               Secure Checkout
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
               Complete Your
-              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent"> Order</span>
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent"> Order</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto opacity-90">
               Secure payment processing with industry-standard encryption
             </p>
           </motion.div>
@@ -82,19 +82,19 @@ export default function CheckoutPage() {
               className="space-y-8"
             >
               {/* Payment Information */}
-              <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <Card className="border border-purple-500/20 shadow-xl bg-gray-900/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                    <CreditCard className="h-6 w-6 text-orange-600" />
+                  <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+                    <CreditCard className="h-6 w-6 text-purple-400" />
                     Payment Information
                   </CardTitle>
-                  <CardDescription className="text-lg text-gray-600">
+                  <CardDescription className="text-lg text-purple-200 opacity-90">
                     Enter your payment details to complete your order
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
-                    <Label htmlFor="cardNumber" className="text-sm font-semibold text-gray-700 mb-2 block">
+                    <Label htmlFor="cardNumber" className="text-sm font-semibold text-purple-200 mb-2 block">
                       Card Number
                     </Label>
                     <Input
@@ -102,12 +102,12 @@ export default function CheckoutPage() {
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
                       onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                      className="text-lg border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      className="text-lg bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="expiryDate" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <Label htmlFor="expiryDate" className="text-sm font-semibold text-purple-200 mb-2 block">
                         Expiry Date
                       </Label>
                       <Input
@@ -115,11 +115,11 @@ export default function CheckoutPage() {
                         placeholder="MM/YY"
                         value={formData.expiryDate}
                         onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                        className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="cvv" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <Label htmlFor="cvv" className="text-sm font-semibold text-purple-200 mb-2 block">
                         CVV
                       </Label>
                       <Input
@@ -127,12 +127,12 @@ export default function CheckoutPage() {
                         placeholder="123"
                         value={formData.cvv}
                         onChange={(e) => handleInputChange('cvv', e.target.value)}
-                        className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                       />
                     </div>
                   </div>
                   <div>
-                    <Label htmlFor="name" className="text-sm font-semibold text-gray-700 mb-2 block">
+                    <Label htmlFor="name" className="text-sm font-semibold text-purple-200 mb-2 block">
                       Name on Card
                     </Label>
                     <Input
@@ -140,23 +140,23 @@ export default function CheckoutPage() {
                       placeholder="John Doe"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                     />
                   </div>
                 </CardContent>
               </Card>
 
               {/* Shipping Information */}
-              <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+              <Card className="border border-purple-500/20 shadow-xl bg-gray-900/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                    <Shield className="h-6 w-6 text-blue-600" />
+                  <CardTitle className="text-2xl font-bold text-white flex items-center gap-2">
+                    <Shield className="h-6 w-6 text-purple-400" />
                     Shipping Information
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div>
-                    <Label htmlFor="email" className="text-sm font-semibold text-gray-700 mb-2 block">
+                    <Label htmlFor="email" className="text-sm font-semibold text-purple-200 mb-2 block">
                       Email Address
                     </Label>
                     <Input
@@ -165,11 +165,11 @@ export default function CheckoutPage() {
                       placeholder="john@example.com"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                     />
                   </div>
                   <div>
-                    <Label htmlFor="address" className="text-sm font-semibold text-gray-700 mb-2 block">
+                    <Label htmlFor="address" className="text-sm font-semibold text-purple-200 mb-2 block">
                       Street Address
                     </Label>
                     <Input
@@ -177,12 +177,12 @@ export default function CheckoutPage() {
                       placeholder="123 Main Street"
                       value={formData.address}
                       onChange={(e) => handleInputChange('address', e.target.value)}
-                      className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="city" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <Label htmlFor="city" className="text-sm font-semibold text-purple-200 mb-2 block">
                         City
                       </Label>
                       <Input
@@ -190,11 +190,11 @@ export default function CheckoutPage() {
                         placeholder="New York"
                         value={formData.city}
                         onChange={(e) => handleInputChange('city', e.target.value)}
-                        className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="zipCode" className="text-sm font-semibold text-gray-700 mb-2 block">
+                      <Label htmlFor="zipCode" className="text-sm font-semibold text-purple-200 mb-2 block">
                         ZIP Code
                       </Label>
                       <Input
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
                         placeholder="10001"
                         value={formData.zipCode}
                         onChange={(e) => handleInputChange('zipCode', e.target.value)}
-                        className="border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="bg-black/50 border-purple-500/50 text-white placeholder:text-gray-500 focus:border-purple-400 focus:ring-purple-400"
                       />
                     </div>
                   </div>
@@ -218,9 +218,9 @@ export default function CheckoutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <Card className="sticky top-8 border-0 shadow-xl bg-white/90 backdrop-blur-sm">
+              <Card className="sticky top-8 border border-purple-500/20 shadow-xl bg-gray-900/50 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-2xl font-bold text-gray-900">
+                  <CardTitle className="text-2xl font-bold text-white">
                     Order Summary
                   </CardTitle>
                 </CardHeader>
@@ -233,36 +233,38 @@ export default function CheckoutPage() {
                           alt={item.name}
                           width={60}
                           height={60}
-                          className="w-15 h-15 object-cover rounded-lg border"
+                          className="w-15 h-15 object-cover rounded-lg border border-purple-500/30"
                         />
                         <div className="flex-1">
-                          <h4 className="font-semibold text-gray-900 text-sm">{item.name}</h4>
-                          <p className="text-gray-600 text-xs">Qty: {item.quantity}</p>
+                          <h4 className="font-semibold text-white text-sm">{item.name}</h4>
+                          <p className="text-gray-300 text-xs">Qty: {item.quantity}</p>
                         </div>
-                        <span className="font-semibold text-gray-900">
+                        <span className="font-semibold text-white">
                           ₹{(item.price * item.quantity).toFixed(0)}
                         </span>
                       </div>
                     ))}
                   </div>
                   
-                  <div className="space-y-3 border-t border-gray-200 pt-4">
-                    <div className="flex justify-between text-gray-600">
+                  <div className="space-y-3 border-t border-purple-500/30 pt-4">
+                    <div className="flex justify-between text-gray-300">
                       <span>Subtotal ({items.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
                       <span>₹{total.toFixed(0)}</span>
                     </div>
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-gray-300">
                       <span>Shipping</span>
-                      <span className="text-green-600 font-semibold">Free</span>
+                      <span className="text-green-400 font-semibold">Free</span>
                     </div>
-                    <div className="flex justify-between text-gray-600">
+                    <div className="flex justify-between text-gray-300">
                       <span>Tax</span>
                       <span>₹{(total * 0.18).toFixed(0)}</span>
                     </div>
-                    <div className="border-t border-gray-200 pt-3">
-                      <div className="flex justify-between text-xl font-bold text-gray-900">
+                    <div className="border-t border-purple-500/30 pt-3">
+                      <div className="flex justify-between text-xl font-bold text-white">
                         <span>Total</span>
-                        <span>₹{(total * 1.18).toFixed(0)}</span>
+                        <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                          ₹{(total * 1.18).toFixed(0)}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -270,7 +272,7 @@ export default function CheckoutPage() {
                   <Button
                     onClick={handlePayment}
                     disabled={!isFormValid || isProcessing}
-                    className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50"
+                    className="w-full h-12 text-lg font-semibold bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-200 disabled:opacity-50"
                   >
                     {isProcessing ? (
                       <>
@@ -285,15 +287,15 @@ export default function CheckoutPage() {
                     )}
                   </Button>
 
-                  <div className="flex items-center gap-2 text-sm text-gray-600">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                  <div className="flex items-center gap-2 text-sm text-gray-300">
+                    <CheckCircle className="h-4 w-4 text-green-400" />
                     <span>256-bit SSL encryption</span>
                   </div>
 
                   <Button
                     variant="outline"
                     onClick={() => router.push('/cart')}
-                    className="w-full border-2 border-gray-300 hover:border-orange-500 hover:text-orange-600"
+                    className="w-full border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
                   >
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     Back to Cart

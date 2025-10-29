@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState, useCallback, Suspense } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap, ArrowLeft } from "lucide-react";
+import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap, ArrowLeft, X, CheckCircle } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
@@ -25,6 +26,8 @@ function AIPageContent() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
   const [generatedImage, setGeneratedImage] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [generatedDesign, setGeneratedDesign] = useState<any>(null);
   const { addItem } = useCart();
   const router = useRouter();
   const params = useSearchParams();
@@ -128,11 +131,15 @@ Your designs are always:
       };
       
       addItem(design);
+      setGeneratedDesign(design);
       
-      // Show success message briefly before redirecting
+      // Show success modal
+      setShowSuccessModal(true);
+      
+      // Redirect to cart after 3 seconds
       setTimeout(() => {
         router.push("/cart");
-      }, 2000);
+      }, 3000);
       
     } catch (err: any) {
       console.error("AI generation error:", err);
@@ -293,51 +300,6 @@ Your designs are always:
                   </Button>
                 </motion.div>
 
-                {generatedImage && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                    className="p-6 bg-gradient-to-br from-green-900/30 via-blue-900/20 to-green-900/30 border border-green-500/30 rounded-xl backdrop-blur-sm"
-                  >
-                    <h3 className="font-semibold text-white mb-4 text-lg flex items-center gap-2">
-                      <Sparkles className="h-5 w-5 text-green-400" />
-                      Generated Design Preview
-                    </h3>
-                    <div className="flex items-center gap-6">
-                      <motion.div 
-                        className="relative"
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                      >
-                        <Image 
-                          src={generatedImage} 
-                          alt="Generated design" 
-                          width={120}
-                          height={120}
-                          className="w-30 h-30 object-cover rounded-xl border-2 border-purple-500/50 shadow-lg"
-                        />
-                        <motion.div 
-                          className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center shadow-lg"
-                          initial={{ scale: 0, rotate: -180 }}
-                          animate={{ scale: 1, rotate: 0 }}
-                          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
-                        >
-                          <Sparkles className="h-3 w-3 text-white" />
-                        </motion.div>
-                      </motion.div>
-                      <div className="flex-1">
-                        <p className="text-purple-100 font-medium mb-2">
-                          Design generated successfully! Added to your cart.
-                        </p>
-                        <p className="text-sm text-gray-400">
-                          Redirecting to cart in a moment...
-                        </p>
-                      </div>
-                    </div>
-                  </motion.div>
-                )}
 
                 {prompt.trim() && !generatedImage && !isGenerating && (
                   <motion.div 
@@ -423,6 +385,143 @@ Your designs are always:
           })}
         </motion.div>
       </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && generatedDesign && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+              onClick={() => {
+                setShowSuccessModal(false);
+                router.push("/cart");
+              }}
+            />
+            <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="w-full max-w-[500px] max-h-[90vh] bg-gradient-to-br from-gray-900 via-purple-900/20 to-black border border-purple-500/30 rounded-2xl shadow-2xl overflow-y-auto pointer-events-auto"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      Design Generated!
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setShowSuccessModal(false);
+                        router.push("/cart");
+                      }}
+                      className="text-gray-400 hover:text-white"
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
+                  </div>
+
+                  <div className="space-y-6">
+                    {/* Success Icon */}
+                    <div className="flex justify-center">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 200 }}
+                        className="w-20 h-20 bg-green-600/20 rounded-full flex items-center justify-center border-2 border-green-500/50"
+                      >
+                        <CheckCircle className="h-10 w-10 text-green-400" />
+                      </motion.div>
+                    </div>
+
+                    {/* Design Preview */}
+                    <div className="flex flex-col items-center gap-4 p-6 bg-gray-800/50 rounded-xl border border-purple-500/20">
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                        className="relative"
+                      >
+                        <Image
+                          src={generatedImage}
+                          alt={generatedDesign.name}
+                          width={150}
+                          height={150}
+                          className="w-40 h-40 object-cover rounded-xl border-2 border-purple-500/50 shadow-lg"
+                        />
+                        <motion.div
+                          className="absolute -top-2 -right-2 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center shadow-lg border-2 border-purple-400/50"
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={{ scale: 1, rotate: 0 }}
+                          transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                        >
+                          <Sparkles className="h-4 w-4 text-white" />
+                        </motion.div>
+                      </motion.div>
+                      <div className="text-center">
+                        <h3 className="text-xl font-bold text-white mb-2">{generatedDesign.name}</h3>
+                        <p className="text-gray-300 text-sm mb-3">{generatedDesign.description}</p>
+                        <div className="flex items-center justify-center gap-2">
+                          <Badge className="bg-purple-600/20 text-purple-300 border border-purple-500/30 text-xs">
+                            {generatedDesign.style}
+                          </Badge>
+                          <span className="text-2xl font-bold text-white">
+                            ₹{generatedDesign.price}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Success Message */}
+                    <div className="p-4 bg-green-600/10 border border-green-500/30 rounded-lg">
+                      <p className="text-green-300 text-sm font-medium text-center">
+                        ✓ Design generated successfully! Added to your cart.
+                      </p>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="space-y-3">
+                      <Button
+                        onClick={() => {
+                          setShowSuccessModal(false);
+                          router.push("/cart");
+                        }}
+                        className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white h-12 text-lg font-semibold"
+                      >
+                        <ShoppingCart className="h-5 w-5 mr-2" />
+                        View Cart
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowSuccessModal(false);
+                          setPrompt("");
+                          setGeneratedImage("");
+                          setGeneratedDesign(null);
+                        }}
+                        className="w-full border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
+                      >
+                        Generate Another Design
+                      </Button>
+                    </div>
+
+                    {/* Redirect Timer */}
+                    <p className="text-xs text-gray-400 text-center">
+                      Redirecting to cart in a moment...
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

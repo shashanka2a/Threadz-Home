@@ -91,18 +91,18 @@ export default function TrackOrderPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case 'completed': return { text: 'Completed', variant: 'default' as const, className: 'bg-green-100 text-green-800' };
-      case 'current': return { text: 'Current', variant: 'default' as const, className: 'bg-orange-100 text-orange-800' };
-      case 'pending': return { text: 'Pending', variant: 'secondary' as const, className: 'bg-gray-100 text-gray-800' };
-      default: return { text: 'Unknown', variant: 'secondary' as const, className: 'bg-gray-100 text-gray-800' };
+      case 'completed': return { text: 'Completed', variant: 'default' as const, className: 'bg-green-600/20 text-green-400 border border-green-500/30' };
+      case 'current': return { text: 'Current', variant: 'default' as const, className: 'bg-orange-600/20 text-orange-400 border border-orange-500/30' };
+      case 'pending': return { text: 'Pending', variant: 'secondary' as const, className: 'bg-gray-600/20 text-gray-400 border border-gray-500/30' };
+      default: return { text: 'Unknown', variant: 'secondary' as const, className: 'bg-gray-600/20 text-gray-400 border border-gray-500/30' };
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/10 to-purple-600/10"></div>
+      <div className="relative overflow-hidden pt-16 bg-black">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -110,15 +110,15 @@ export default function TrackOrderPage() {
             transition={{ duration: 0.6 }}
             className="text-center"
           >
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-indigo-100 text-indigo-800 text-sm font-medium mb-6">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-600/20 text-purple-300 text-sm font-medium mb-6 border border-purple-500/40 backdrop-blur-sm">
               <Truck className="h-4 w-4 mr-2" />
               Order Tracking
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
               Track Your
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"> Order</span>
+              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent"> Order</span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-purple-100 max-w-3xl mx-auto mb-8 opacity-90">
               Monitor your order's journey from our warehouse to your doorstep
             </p>
           </motion.div>
@@ -134,61 +134,61 @@ export default function TrackOrderPage() {
           className="space-y-8"
         >
           {/* Order Info */}
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <Card className="border border-purple-500/20 shadow-xl bg-gray-900/50 backdrop-blur-sm">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-gray-900">
+              <CardTitle className="text-2xl font-bold text-white">
                 Order Information
               </CardTitle>
-              <CardDescription className="text-lg text-gray-600">
+              <CardDescription className="text-lg text-purple-200 opacity-90">
                 Track your order in real-time
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center">
-                <div className="inline-flex items-center px-6 py-3 bg-gray-100 rounded-lg">
-                  <Package className="h-6 w-6 text-gray-600 mr-3" />
+                <div className="inline-flex items-center px-6 py-3 bg-gray-800/50 rounded-lg border border-purple-500/30">
+                  <Package className="h-6 w-6 text-purple-400 mr-3" />
                   <div>
-                    <p className="text-sm text-gray-600">Order Number</p>
-                    <p className="text-xl font-bold text-gray-900 font-mono">{orderId}</p>
+                    <p className="text-sm text-gray-300">Order Number</p>
+                    <p className="text-xl font-bold text-white font-mono">{orderId}</p>
                   </div>
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                <div className="p-6 bg-blue-50 rounded-xl">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Package className="h-6 w-6 text-blue-600" />
+                <div className="p-6 bg-purple-600/10 rounded-xl border border-purple-500/20">
+                  <div className="w-12 h-12 bg-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-purple-500/30">
+                    <Package className="h-6 w-6 text-purple-400" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">2 Items</h3>
-                  <p className="text-sm text-gray-600">Premium quality apparel</p>
+                  <h3 className="font-semibold text-white mb-2">2 Items</h3>
+                  <p className="text-sm text-gray-300">Premium quality apparel</p>
                 </div>
                 
-                <div className="p-6 bg-green-50 rounded-xl">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Truck className="h-6 w-6 text-green-600" />
+                <div className="p-6 bg-green-600/10 rounded-xl border border-green-500/20">
+                  <div className="w-12 h-12 bg-green-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                    <Truck className="h-6 w-6 text-green-400" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">Free Shipping</h3>
-                  <p className="text-sm text-gray-600">Standard delivery included</p>
+                  <h3 className="font-semibold text-white mb-2">Free Shipping</h3>
+                  <p className="text-sm text-gray-300">Standard delivery included</p>
                 </div>
                 
-                <div className="p-6 bg-purple-50 rounded-xl">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Clock className="h-6 w-6 text-purple-600" />
+                <div className="p-6 bg-pink-600/10 rounded-xl border border-pink-500/20">
+                  <div className="w-12 h-12 bg-pink-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-pink-500/30">
+                    <Clock className="h-6 w-6 text-pink-400" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">3-5 Days</h3>
-                  <p className="text-sm text-gray-600">Estimated delivery time</p>
+                  <h3 className="font-semibold text-white mb-2">3-5 Days</h3>
+                  <p className="text-sm text-gray-300">Estimated delivery time</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
           {/* Tracking Timeline */}
-          <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <Card className="border border-purple-500/20 shadow-xl bg-gray-900/50 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-2xl font-bold text-gray-900">
+              <CardTitle className="text-2xl font-bold text-white">
                 Tracking Timeline
               </CardTitle>
-              <CardDescription className="text-lg text-gray-600">
+              <CardDescription className="text-lg text-purple-200 opacity-90">
                 Follow your order's journey step by step
               </CardDescription>
             </CardHeader>
@@ -207,23 +207,23 @@ export default function TrackOrderPage() {
                       className="flex items-start gap-4"
                     >
                       <div className="flex flex-col items-center">
-                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${getStatusColor(step.status)}`}>
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center ${getStatusColor(step.status)} border-2 border-white/20`}>
                           <Icon className="h-6 w-6 text-white" />
                         </div>
                         {index < trackingSteps.length - 1 && (
-                          <div className={`w-0.5 h-16 mt-2 ${step.status === 'completed' ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+                          <div className={`w-0.5 h-16 mt-2 ${step.status === 'completed' ? 'bg-green-500' : 'bg-gray-600'}`}></div>
                         )}
                       </div>
                       
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-2">
-                          <h3 className="text-lg font-semibold text-gray-900">{step.title}</h3>
+                          <h3 className="text-lg font-semibold text-white">{step.title}</h3>
                           <Badge className={statusBadge.className}>
                             {statusBadge.text}
                           </Badge>
                         </div>
-                        <p className="text-gray-600 mb-2">{step.description}</p>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <p className="text-gray-300 mb-2">{step.description}</p>
+                        <div className="flex items-center gap-4 text-sm text-gray-400">
                           <span className="flex items-center gap-1">
                             <Clock className="h-4 w-4" />
                             {step.date}
@@ -247,7 +247,7 @@ export default function TrackOrderPage() {
           >
             <Button
               onClick={() => window.location.reload()}
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 h-12 px-8"
+              className="bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/50 transition-all duration-200 h-12 px-8"
             >
               <RefreshCw className="h-5 w-5 mr-2" />
               Refresh Status
@@ -255,7 +255,7 @@ export default function TrackOrderPage() {
             <Button
               variant="outline"
               onClick={() => router.push('/')}
-              className="border-2 border-gray-300 hover:border-indigo-500 hover:text-indigo-600 h-12 px-8"
+              className="border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm h-12 px-8"
             >
               <Home className="h-5 w-5 mr-2" />
               Back to Home
@@ -269,21 +269,21 @@ export default function TrackOrderPage() {
             transition={{ duration: 0.6, delay: 1.0 }}
             className="text-center"
           >
-            <Card className="bg-gradient-to-r from-gray-50 to-indigo-50 border-0">
+            <Card className="bg-gradient-to-r from-gray-900/50 to-purple-900/30 border border-purple-500/20">
               <CardContent className="p-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                <h3 className="text-xl font-bold text-white mb-4">
                   Need Help?
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">📞 Customer Support</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-semibold text-white mb-2">📞 Customer Support</h4>
+                    <p className="text-sm text-gray-300">
                       Contact our support team for any questions about your order.
                     </p>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-2">📧 Email Updates</h4>
-                    <p className="text-sm text-gray-600">
+                    <h4 className="font-semibold text-white mb-2">📧 Email Updates</h4>
+                    <p className="text-sm text-gray-300">
                       We'll send you email notifications when your order status changes.
                     </p>
                   </div>
