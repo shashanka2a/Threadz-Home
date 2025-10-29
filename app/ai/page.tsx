@@ -1,25 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+    import React, { useEffect, useState, useCallback } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/context/CartContext";
-import { useRouter } from "next/navigation";
+    import { useRouter, useSearchParams } from "next/navigation";
 import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap } from "lucide-react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
 export default function AIPage() {
-  const [prompt, setPrompt] = useState("");
+      const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
   const [generatedImage, setGeneratedImage] = useState("");
   const { addItem } = useCart();
   const router = useRouter();
+      const params = useSearchParams();
 
-  const handleGenerate = async () => {
+      const handleGenerate = useCallback(async () => {
     if (!prompt.trim()) return;
     
     setIsGenerating(true);
@@ -91,10 +92,21 @@ export default function AIPage() {
     } catch (err) {
       console.error("AI generation error:", err);
       setError("Failed to generate design. Please try again with a different prompt.");
-    } finally {
+        } finally {
       setIsGenerating(false);
     }
-  };
+      }, [prompt, addItem, router]);
+
+      useEffect(() => {
+        const p = params.get('prompt');
+        if (p && !generatedImage && !isGenerating) {
+          setPrompt(p);
+          // Defer to allow state update before generating
+          setTimeout(() => {
+            void handleGenerate();
+          }, 0);
+        }
+      }, [params, handleGenerate, generatedImage, isGenerating]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">

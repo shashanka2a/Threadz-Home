@@ -50,6 +50,7 @@ function AnimatedSection({ children, className = "" }: { children: React.ReactNo
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [vibe, setVibe] = useState("");
   const router = useRouter();
 
   return (
@@ -287,6 +288,8 @@ export default function App() {
                   id="vibe-input"
                   placeholder="e.g., cosmic tiger with neon Delhi streets"
                   className="bg-black/50 border-purple-400/50 text-white placeholder:text-gray-500 h-14 sm:h-16 rounded-xl focus:border-purple-300 focus:ring-purple-300 transition-all duration-300"
+                  value={vibe}
+                  onChange={(e) => setVibe(e.target.value)}
                 />
               </div>
               
@@ -294,6 +297,14 @@ export default function App() {
                 <Button 
                   className="w-full sm:flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/50 h-12 sm:h-11 active:scale-[0.98]"
                   size="lg"
+                  onClick={() => {
+                    if (!vibe.trim()) {
+                      const el = document.getElementById('vibe-input');
+                      if (el) (el as HTMLInputElement).focus();
+                      return;
+                    }
+                    router.push(`/ai?prompt=${encodeURIComponent(vibe)}`);
+                  }}
                 >
                   <Sparkles className="mr-2 h-5 w-5" />
                   Generate Design →
