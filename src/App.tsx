@@ -524,13 +524,15 @@ export default function App() {
             {/* Social Icons - Mobile optimized */}
             <div className="flex justify-center gap-4 sm:gap-6">
               {[
-                { icon: Instagram, href: '#', label: 'Instagram' },
-                { icon: Twitter, href: '#', label: 'Twitter' },
-                { icon: Facebook, href: '#', label: 'Facebook' }
+                { icon: Instagram, href: 'https://instagram.com/threadz.wtf', label: 'Instagram' },
+                { icon: Twitter, href: 'https://twitter.com/threadz_wtf', label: 'Twitter' },
+                { icon: Facebook, href: 'https://facebook.com/threadz.wtf', label: 'Facebook' }
               ].map(({ icon: Icon, href, label }, idx) => (
                 <motion.a
                   key={idx}
                   href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={label}
                   className="w-12 h-12 sm:w-14 sm:h-14 border-2 border-white/30 rounded-full flex items-center justify-center hover:border-purple-300 hover:bg-purple-500/20 transition-all duration-300 active:scale-95"
                   whileHover={{ scale: 1.1 }}
