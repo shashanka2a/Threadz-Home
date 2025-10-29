@@ -5,7 +5,6 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ImageWithFallback } from "./components/figma/ImageWithFallback";
 import { Button } from "./components/ui/button";
-import { Input } from "./components/ui/input";
 import { Sparkles, Pencil, Shirt, Rocket, Instagram, Twitter, Facebook, Menu, X } from "lucide-react";
 
 // Animation variants optimized for mobile
@@ -51,7 +50,6 @@ function AnimatedSection({ children, className = "", id }: { children: React.Rea
 
 export default function App() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [vibe, setVibe] = useState("");
   const router = useRouter();
 
   return (
@@ -349,91 +347,7 @@ export default function App() {
         </div>
       </AnimatedSection>
 
-      {/* Section 2 - AI Design Lab */}
-      <AnimatedSection id="ai-lab" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gradient-to-b from-gray-950 to-black">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-10 sm:mb-12">
-            <div className="inline-block bg-purple-600/20 text-purple-300 px-4 py-2 rounded-full mb-4 border border-purple-500/40">
-              Beta
-            </div>
-            <h2 className="section-heading mb-4">
-              AI Design Lab
-            </h2>
-            <p className="text-gray-300 max-w-2xl mx-auto px-4 leading-relaxed">
-              Describe your vibe in words, watch AI turn it into wearable art
-            </p>
-          </div>
-          
-          <motion.div 
-            className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 p-6 sm:p-8 md:p-12 rounded-3xl border border-purple-500/30 backdrop-blur-sm"
-            whileHover={{ scale: 1.01 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="space-y-6">
-              <div>
-                <label htmlFor="vibe-input" className="text-purple-200 mb-3 block">
-                  Describe your vibe...
-                </label>
-                <Input
-                  id="vibe-input"
-                  placeholder="e.g., cosmic tiger with neon Delhi streets"
-                  className="bg-black/50 border-purple-400/50 text-white placeholder:text-gray-500 h-14 sm:h-16 rounded-xl focus:border-purple-300 focus:ring-purple-300 transition-all duration-300"
-                  value={vibe}
-                  onChange={(e) => setVibe(e.target.value)}
-                />
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Button 
-                  className="w-full sm:flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/50 h-12 sm:h-11 active:scale-[0.98]"
-                  size="lg"
-                  onClick={() => {
-                    if (!vibe.trim()) {
-                      const el = document.getElementById('vibe-input');
-                      if (el) (el as HTMLInputElement).focus();
-                      return;
-                    }
-                    router.push(`/ai?prompt=${encodeURIComponent(vibe)}`);
-                  }}
-                >
-                  <Sparkles className="mr-2 h-5 w-5" />
-                  Generate Design →
-                </Button>
-                <Button 
-                  onClick={() => {
-                    const streetwearSection = document.querySelector('[data-section="streetwear"]');
-                    if (streetwearSection) {
-                      streetwearSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                  variant="outline"
-                  className="w-full sm:w-auto bg-transparent border-purple-400/50 text-purple-200 hover:bg-purple-500/10 hover:border-purple-300 h-12 sm:h-11 active:scale-[0.98]"
-                  size="lg"
-                >
-                  See Examples
-                </Button>
-              </div>
-              
-              {/* AI Output Preview */}
-              <div className="mt-6 sm:mt-8 bg-black/40 rounded-2xl p-8 sm:p-12 border border-purple-500/20 min-h-[280px] flex items-center justify-center backdrop-blur-sm">
-                <div className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-purple-600/20 rounded-2xl flex items-center justify-center mx-auto border border-purple-500/40">
-                    <Sparkles className="h-8 w-8 text-purple-300" />
-                  </div>
-                  <p className="text-gray-300 leading-relaxed">
-                    Your AI-generated design will appear here
-                  </p>
-                  <p className="text-purple-300">
-                    Ready to bring your imagination to life?
-                  </p>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </AnimatedSection>
-
-      {/* Section 3 - AI Meets Streetwear */}
+      {/* Section 2 - AI Meets Streetwear */}
       <AnimatedSection id="designs" className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-[#0B0B0F]" data-section="streetwear">
         <div className="max-w-7xl mx-auto">
           <motion.div
