@@ -58,8 +58,8 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/threadz.png" alt="Threadz" width={56} height={56} className="object-contain" />
-            <h1 className="logo-text">Threadz.studio</h1>
+            <img src="/threadz.png" alt="Threadz" width={112} height={112} className="object-contain" />
+            <h1 className="logo-text">Threadz</h1>
           </div>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -436,14 +436,6 @@ export default function App() {
                     <p className="text-sm text-gray-300 mb-6 max-w-xs leading-relaxed">
                       {shirt.description}
                     </p>
-                    
-                    {/* CTA Button */}
-                    <button 
-                      onClick={() => window.location.href = '/products'}
-                      className="px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white font-bold rounded-full transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl"
-                    >
-                      👕 Cop This Design ⚡
-                    </button>
                   </div>
                   
                   {/* Accent border */}
@@ -560,7 +552,7 @@ export default function App() {
             
             {/* Brand */}
             <div className="pt-6 sm:pt-8 border-t border-purple-900/30">
-              <h3 className="graffiti-heading mb-2">Threadz.studio</h3>
+              <h3 className="graffiti-heading mb-2">Threadz</h3>
               <p className="text-gray-500">
                 © 2025 Threadz. All vibes reserved.
               </p>
