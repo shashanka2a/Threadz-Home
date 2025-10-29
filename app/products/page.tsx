@@ -8,11 +8,20 @@ import { useCart } from "@/context/CartContext";
 import { ShoppingCart, Star, Heart, Zap } from "lucide-react";
 import Image from "next/image";
 
+// Helper function to calculate price based on colors in design
+// Base price: ₹899, +₹100 per additional color (max ₹1299)
+function calculatePriceBasedOnColors(colors: string[]): number {
+  const basePrice = 899;
+  const colorCount = colors.length || 1; // Default to 1 if no colors specified
+  const additionalColorPrice = Math.min(colorCount - 1, 4) * 100; // Max 4 additional colors
+  return Math.min(basePrice + additionalColorPrice, 1299);
+}
+
 const products = [
   {
     id: "1",
     name: "LAID OFF",
-    price: 29.99,
+    colors: ["red", "orange", "black"], // 3 colors
     image: "/laid-off.png",
     description: "When the algorithm becomes your boss",
     category: "AI Humor",
@@ -24,7 +33,7 @@ const products = [
   {
     id: "2", 
     name: "PROMPT ENGINEER IRL",
-    price: 32.99,
+    colors: ["blue", "cyan", "white", "black"], // 4 colors
     image: "/prompt-engineer.png",
     description: "Making AI do the heavy lifting",
     category: "Tech Culture",
@@ -36,7 +45,7 @@ const products = [
   {
     id: "3",
     name: "TRUST ME, I ASKED CHATGPT",
-    price: 27.99,
+    colors: ["green", "emerald", "black"], // 3 colors
     image: "/asked-chatgpt.png",
     description: "AI-approved life decisions",
     category: "Viral",
@@ -48,7 +57,7 @@ const products = [
   {
     id: "4",
     name: "COFFEE-N-GPU",
-    price: 34.99,
+    colors: ["purple", "pink", "black", "white"], // 4 colors
     image: "/coffee-n-gpu.png",
     description: "Caffeine and compute power for the modern dev",
     category: "Dev Life",
@@ -60,7 +69,7 @@ const products = [
   {
     id: "5",
     name: "404 ERROR",
-    price: 29.99,
+    colors: ["orange", "red", "black"], // 3 colors
     image: "/404-error.png",
     description: "Page not found, but style always found",
     category: "Dev Life",
@@ -72,7 +81,7 @@ const products = [
   {
     id: "6",
     name: "LOW LATENCY",
-    price: 31.99,
+    colors: ["cyan", "blue", "white", "black"], // 4 colors
     image: "/low-latency.png",
     description: "Fast response times, instant style",
     category: "Tech Culture",
@@ -81,7 +90,10 @@ const products = [
     badge: "Hot",
     accent: "from-cyan-500 to-blue-500"
   }
-];
+].map(product => ({
+  ...product,
+  price: calculatePriceBasedOnColors(product.colors || [])
+}));
 
 export default function ProductsPage() {
   const { addItem } = useCart();
@@ -266,7 +278,7 @@ export default function ProductsPage() {
                   
                   <div className="flex items-center justify-between pt-2">
                     <div className="text-2xl font-bold text-white">
-                      ${product.price}
+                      ₹{product.price}
                     </div>
                     <motion.div
                       whileHover={{ scale: 1.05 }}

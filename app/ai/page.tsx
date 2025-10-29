@@ -11,6 +11,15 @@ import { Sparkles, ShoppingCart, AlertCircle, Wand2, Palette, Zap } from "lucide
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Image from "next/image";
 
+// Helper function to calculate price based on colors in design
+// Base price: ₹899, +₹100 per additional color (max ₹1299)
+function calculatePriceBasedOnColors(colors: string[]): number {
+  const basePrice = 899;
+  const colorCount = colors.length || 1; // Default to 1 if no colors specified
+  const additionalColorPrice = Math.min(colorCount - 1, 4) * 100; // Max 4 additional colors
+  return Math.min(basePrice + additionalColorPrice, 1299);
+}
+
 function AIPageContent() {
   const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -109,7 +118,7 @@ Your designs are always:
       const design = {
         id: `design-${Date.now()}`,
         name: designData.title,
-        price: 29.99,
+        price: calculatePriceBasedOnColors(designData.colors || []),
         image: imageUrl,
         description: designData.description,
         style: designData.style,

@@ -240,7 +240,7 @@ export default function CheckoutPage() {
                           <p className="text-gray-600 text-xs">Qty: {item.quantity}</p>
                         </div>
                         <span className="font-semibold text-gray-900">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ₹{(item.price * item.quantity).toFixed(0)}
                         </span>
                       </div>
                     ))}
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                   <div className="space-y-3 border-t border-gray-200 pt-4">
                     <div className="flex justify-between text-gray-600">
                       <span>Subtotal ({items.reduce((sum, item) => sum + item.quantity, 0)} items)</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>₹{total.toFixed(0)}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Shipping</span>
@@ -257,12 +257,12 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Tax</span>
-                      <span>${(total * 0.08).toFixed(2)}</span>
+                      <span>₹{(total * 0.18).toFixed(0)}</span>
                     </div>
                     <div className="border-t border-gray-200 pt-3">
                       <div className="flex justify-between text-xl font-bold text-gray-900">
                         <span>Total</span>
-                        <span>${(total * 1.08).toFixed(2)}</span>
+                        <span>₹{(total * 1.18).toFixed(0)}</span>
                       </div>
                     </div>
                   </div>

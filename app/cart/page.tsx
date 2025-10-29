@@ -164,7 +164,7 @@ export default function CartPage() {
                               </Button>
                             </div>
                             <div className="text-xl font-bold text-gray-900">
-                              ${(item.price * item.quantity).toFixed(2)}
+                              ₹{(item.price * item.quantity).toFixed(0)}
                             </div>
                           </div>
                         </div>
@@ -210,7 +210,7 @@ export default function CartPage() {
                   <div className="space-y-3">
                     <div className="flex justify-between text-gray-600">
                       <span>Items ({items.reduce((sum, item) => sum + item.quantity, 0)})</span>
-                      <span>${total.toFixed(2)}</span>
+                      <span>₹{total.toFixed(0)}</span>
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Shipping</span>
@@ -218,12 +218,12 @@ export default function CartPage() {
                     </div>
                     <div className="flex justify-between text-gray-600">
                       <span>Tax</span>
-                      <span>${(total * 0.08).toFixed(2)}</span>
+                      <span>₹{(total * 0.18).toFixed(0)}</span>
                     </div>
                     <div className="border-t border-gray-200 pt-3">
                       <div className="flex justify-between text-xl font-bold text-gray-900">
                         <span>Total</span>
-                        <span>${(total * 1.08).toFixed(2)}</span>
+                        <span>₹{(total * 1.18).toFixed(0)}</span>
                       </div>
                     </div>
                   </div>
