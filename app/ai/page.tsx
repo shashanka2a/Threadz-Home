@@ -860,7 +860,8 @@ Your designs are always:
               >
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                    <h2 className="flex items-center gap-2 text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                      <CheckCircle className="h-6 w-6 text-green-400" />
                       Design Generated!
                     </h2>
                     <Button
@@ -876,17 +877,6 @@ Your designs are always:
                   </div>
 
                   <div className="space-y-6">
-                    {/* Success Icon */}
-                    <div className="flex justify-center">
-                      <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ type: "spring", stiffness: 200 }}
-                        className="w-20 h-20 bg-green-600/20 rounded-full flex items-center justify-center border-2 border-green-500/50"
-                      >
-                        <CheckCircle className="h-10 w-10 text-green-400" />
-                      </motion.div>
-                    </div>
 
                     {/* Design Preview */}
                     <div className="flex flex-col items-center gap-4 p-6 bg-gray-800/50 rounded-xl border border-purple-500/20">
@@ -967,19 +957,6 @@ Your designs are always:
                           Edit Prompt
                         </Button>
                       </div>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setShowSuccessModal(false);
-                          setPrompt("");
-                          setGeneratedImage("");
-                          setGeneratedDesign(null);
-                          setOriginalPrompt("");
-                        }}
-                        className="w-full border-2 border-purple-500/50 hover:border-purple-400 hover:text-purple-300 text-white bg-black/60 backdrop-blur-sm"
-                      >
-                        Generate Another Design
-                      </Button>
                     </div>
 
                     {/* No auto-cart note */}
