@@ -194,8 +194,7 @@ Your designs are always:
         const fallbackDesign = createFallbackDesign(prompt);
         const imageUrl = fallbackDesign.image;
         setGeneratedImage(imageUrl);
-        
-        addItem(fallbackDesign);
+
         setGeneratedDesign(fallbackDesign);
         setOriginalPrompt(prompt);
         setShowSuccessModal(true);
@@ -238,7 +237,6 @@ Your designs are always:
         originalPrompt: prompt
       };
       
-      addItem(design);
       setGeneratedDesign(design);
       setOriginalPrompt(prompt); // Store the original prompt
       
@@ -254,7 +252,6 @@ Your designs are always:
       const imageUrl = fallbackDesign.image;
       setGeneratedImage(imageUrl);
       
-      addItem(fallbackDesign);
       setGeneratedDesign(fallbackDesign);
       setOriginalPrompt(prompt);
       setShowSuccessModal(true);
@@ -347,12 +344,7 @@ Your designs are always:
         const fallbackDesign = createFallbackDesign(promptToUse);
         const imageUrl = fallbackDesign.image;
         setGeneratedImage(imageUrl);
-        
-        // Replace the last item in cart with new design
-        if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-          removeItem(items[items.length - 1].id);
-        }
-        addItem(fallbackDesign);
+
         setGeneratedDesign(fallbackDesign);
         setOriginalPrompt(promptToUse);
         setShowSuccessModal(true);
@@ -391,11 +383,6 @@ Your designs are always:
         originalPrompt: promptToUse
       };
       
-      // Replace the last item in cart with new design
-      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-        removeItem(items[items.length - 1].id);
-      }
-      addItem(design);
       setGeneratedDesign(design);
       setOriginalPrompt(promptToUse);
       setShowSuccessModal(true);
@@ -408,11 +395,6 @@ Your designs are always:
       const imageUrl = fallbackDesign.image;
       setGeneratedImage(imageUrl);
       
-      // Replace the last item in cart with new design
-      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-        removeItem(items[items.length - 1].id);
-      }
-      addItem(fallbackDesign);
       setGeneratedDesign(fallbackDesign);
       setOriginalPrompt(promptToUse);
       setShowSuccessModal(true);
@@ -509,12 +491,7 @@ Your designs are always:
         const fallbackDesign = createFallbackDesign(editedPrompt);
         const imageUrl = fallbackDesign.image;
         setGeneratedImage(imageUrl);
-        
-        // Replace the last item in cart with new design
-        if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-          removeItem(items[items.length - 1].id);
-        }
-        addItem(fallbackDesign);
+
         setGeneratedDesign(fallbackDesign);
         setOriginalPrompt(editedPrompt);
         setShowSuccessModal(true);
@@ -553,11 +530,6 @@ Your designs are always:
         originalPrompt: editedPrompt
       };
       
-      // Replace the last item in cart with new design
-      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-        removeItem(items[items.length - 1].id);
-      }
-      addItem(design);
       setGeneratedDesign(design);
       setOriginalPrompt(editedPrompt);
       setShowSuccessModal(true);
@@ -570,11 +542,6 @@ Your designs are always:
       const imageUrl = fallbackDesign.image;
       setGeneratedImage(imageUrl);
       
-      // Replace the last item in cart with new design
-      if (items.length > 0 && items[items.length - 1].type === "ai-generated") {
-        removeItem(items[items.length - 1].id);
-      }
-      addItem(fallbackDesign);
       setGeneratedDesign(fallbackDesign);
       setOriginalPrompt(editedPrompt);
       setShowSuccessModal(true);
@@ -820,8 +787,8 @@ Your designs are always:
             },
             {
               icon: ShoppingCart,
-              title: "Instant Order",
-              description: "Generated designs are automatically added to your cart for purchase",
+              title: "Choose & Checkout",
+              description: "Review the design and add to cart when you're ready",
               gradient: "from-blue-600/20 to-cyan-600/20",
               iconColor: "text-blue-400",
               borderColor: "border-blue-500/30"
@@ -880,7 +847,6 @@ Your designs are always:
               className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
               onClick={() => {
                 setShowSuccessModal(false);
-                setShowCart(true);
               }}
             />
             <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 pointer-events-none">
@@ -902,7 +868,6 @@ Your designs are always:
                       size="sm"
                       onClick={() => {
                         setShowSuccessModal(false);
-                        setShowCart(true);
                       }}
                       className="text-gray-400 hover:text-white"
                     >
@@ -962,9 +927,9 @@ Your designs are always:
                     </div>
 
                     {/* Success Message */}
-                    <div className="p-4 bg-green-600/10 border border-green-500/30 rounded-lg">
-                      <p className="text-green-300 text-sm font-medium text-center">
-                        ✓ Design generated successfully! Added to your cart.
+                    <div className="p-4 bg-purple-600/10 border border-purple-500/30 rounded-lg">
+                      <p className="text-purple-200 text-sm font-medium text-center">
+                        Design ready. Review it and add to cart when you're ready.
                       </p>
                     </div>
 
@@ -972,13 +937,16 @@ Your designs are always:
                     <div className="space-y-3">
                       <Button
                         onClick={() => {
+                          if (generatedDesign) {
+                            addItem(generatedDesign);
+                          }
                           setShowSuccessModal(false);
                           setShowCart(true);
                         }}
                         className="w-full bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white h-12 text-lg font-semibold"
                       >
                         <ShoppingCart className="h-5 w-5 mr-2" />
-                        View Cart
+                        Add to Cart
                       </Button>
                       <div className="grid grid-cols-2 gap-3">
                         <Button
@@ -1014,10 +982,7 @@ Your designs are always:
                       </Button>
                     </div>
 
-                    {/* Redirect Timer */}
-                    <p className="text-xs text-gray-400 text-center">
-                      Design added to cart successfully!
-                    </p>
+                    {/* No auto-cart note */}
                   </div>
                 </div>
               </motion.div>
