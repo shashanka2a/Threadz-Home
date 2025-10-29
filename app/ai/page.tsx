@@ -350,7 +350,7 @@ Your designs are always:
             {
               icon: Wand2,
               title: "AI-Powered",
-              description: "Advanced Gemini AI technology creates unique designs based on your description",
+              description: "Advanced Gemini AI technology creates unique designs",
               gradient: "from-purple-600/20 to-pink-600/20",
               iconColor: "text-purple-400",
               borderColor: "border-purple-500/30"
