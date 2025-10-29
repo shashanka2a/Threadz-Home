@@ -98,14 +98,11 @@ export default function App() {
               Create
             </a>
             <a 
-              href="#ai-lab" 
+              href="/ai" 
               className="nav-link"
               onClick={(e) => {
                 e.preventDefault();
-                const section = document.getElementById('ai-lab');
-                if (section) {
-                  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
+                router.push('/ai');
               }}
             >
               AI Lab
@@ -156,17 +153,12 @@ export default function App() {
                 Create
               </a>
               <a
-                href="#ai-lab"
+                href="/ai"
                 className="block px-4 py-3 rounded-lg hover:bg-purple-500/10 transition-colors nav-link"
                 onClick={(e) => {
                   e.preventDefault();
                   setMobileMenuOpen(false);
-                  const section = document.getElementById('ai-lab');
-                  if (section) {
-                    setTimeout(() => {
-                      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }
+                  router.push('/ai');
                 }}
               >
                 AI Lab
@@ -250,16 +242,6 @@ export default function App() {
               >
                 <Pencil className="mr-2 h-5 w-5" />
                 Create Your Own
-              </Button>
-            </motion.div>
-            <motion.div variants={fadeInUp} className="w-full sm:w-auto">
-              <Button 
-                size="lg" 
-                className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] hover:shadow-xl hover:shadow-pink-500/30 px-6 sm:px-8 h-12 sm:h-11"
-                onClick={() => router.push('/ai')}
-              >
-                <Sparkles className="mr-2 h-5 w-5" />
-                Drop a Vibe
               </Button>
             </motion.div>
           </motion.div>

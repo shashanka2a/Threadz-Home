@@ -112,8 +112,7 @@ export default function ProductsPage() {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       {/* Hero Section */}
-      <div className="relative overflow-hidden pt-16">
-        <div className="absolute inset-0 bg-gradient-to-br from-black via-purple-950/80 to-violet-900/70" />
+      <div className="relative overflow-hidden pt-16 bg-black">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-20">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
