@@ -258,18 +258,26 @@ export default function App() {
         </div>
       </AnimatedSection>
 
-      {/* Section 2 - Streetwear Meets Creativity */}
-      <AnimatedSection className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-gray-950">
+      {/* Section 2 - AI Meets Streetwear */}
+      <AnimatedSection className="py-16 sm:py-20 md:py-24 px-4 sm:px-6 md:px-12 bg-[#0B0B0F]">
         <div className="max-w-7xl mx-auto">
-          <h2 className="section-heading mb-3 sm:mb-4 text-center">
-            Streetwear Meets Creativity
-          </h2>
-          <p className="text-center text-gray-300 mb-12 sm:mb-16 max-w-2xl mx-auto px-4 leading-relaxed">
-            Explore curated collections, collab with creators, or get your designs printed in 48 hours
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 sm:mb-16"
+          >
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-pink-400 to-red-400 bg-clip-text text-transparent">
+              🔥 Drop Alert: AI Meets Streetwear
+            </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Funny. Bold. Too Real. New AI-coded T-shirts you'll actually want to wear.
+            </p>
+          </motion.div>
           
           <motion.div 
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 mb-12"
             variants={staggerContainer}
             initial="hidden"
             whileInView="visible"
@@ -277,74 +285,105 @@ export default function App() {
           >
             {[
               {
-                title: "Culture Drops",
-                description: "Limited edition designs inspired by Indian streets",
-                image: "https://images.unsplash.com/photo-1624982220549-375dd6ca53f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHJlZXQlMjBhcnQlMjBtdXJhbCUyMGNvbG9yZnVsfGVufDF8fHx8MTc2MTY0OTA5MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-                accent: "from-purple-600 to-pink-600"
+                title: "LAID OFF",
+                subtitle: "by AI",
+                description: "When the algorithm becomes your boss",
+                image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
+                accent: "from-red-500 to-orange-500"
               },
               {
-                title: "Collab Zone",
-                description: "Team up with artists and creators",
-                image: "https://images.unsplash.com/photo-1658232190602-be6cd5b976f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwYXJ0JTIwaG9sb2dyYXBoaWN8ZW58MXx8fHwxNzYxNTk5NjkwfDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-                accent: "from-cyan-600 to-blue-600"
+                title: "PROMPT ENGINEER IRL",
+                subtitle: "",
+                description: "Making AI do the heavy lifting",
+                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=500&fit=crop&q=80&auto=format",
+                accent: "from-blue-500 to-cyan-500"
               },
               {
-                title: "Fast Prints",
-                description: "Upload & print custom designs instantly",
-                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop&q=80&auto=format",
-                accent: "from-orange-600 to-red-600"
+                title: "TRUST ME, I ASKED CHATGPT",
+                subtitle: "",
+                description: "AI-approved life decisions",
+                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop&q=80&auto=format",
+                accent: "from-green-500 to-emerald-500"
               },
               {
-                title: "Vibe Archive",
-                description: "Browse thousands of community designs",
-                image: "https://images.unsplash.com/photo-1758044119196-caf0016f9034?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZW9uJTIwYWJzdHJhY3QlMjBwYXR0ZXJufGVufDF8fHx8MTc2MTY0OTA4OXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-                accent: "from-violet-600 to-purple-600"
-              },
-              {
-                title: "Sustainability First",
-                description: "Eco-friendly fabrics and responsible printing",
-                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop&q=80&auto=format",
-                accent: "from-green-600 to-emerald-600"
-              },
-              {
-                title: "Campus Fits",
-                description: "Trending styles for college vibes",
-                image: "https://images.unsplash.com/photo-1600440699677-c6f39725adf6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1cmJhbiUyMHlvdXRoJTIwY3VsdHVyZXxlbnwxfHx8fDE3NjE2NDkwODl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-                accent: "from-pink-600 to-rose-600"
+                title: "AI WROTE THIS FIT",
+                subtitle: "",
+                description: "Algorithmic style, human swagger",
+                image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=500&fit=crop&q=80&auto=format",
+                accent: "from-purple-500 to-pink-500"
               }
-            ].map((card, idx) => (
+            ].map((shirt, idx) => (
               <motion.div
                 key={idx}
                 variants={fadeInUp}
-                className="group relative overflow-hidden rounded-2xl cursor-pointer touch-manipulation"
-                whileHover={{ y: -6 }}
+                className="group relative overflow-hidden rounded-2xl cursor-pointer"
+                whileHover={{ y: -8, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="aspect-[4/5] relative bg-gray-900">
+                <div className="aspect-[3/4] relative bg-gray-900">
                   <ImageWithFallback
-                    src={card.image}
-                    alt={card.title}
+                    src={shirt.image}
+                    alt={shirt.title}
                     className="w-full h-full object-cover"
                   />
                   
-                  {/* Improved gradient overlay with better contrast */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/20 opacity-90 group-hover:opacity-95 transition-opacity duration-300" />
+                  {/* Dark overlay for text readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/70 to-black/30 opacity-80 group-hover:opacity-90 transition-opacity duration-300" />
                   
-                  {/* Subtle accent glow */}
-                  <div className={`absolute inset-0 opacity-0 group-hover:opacity-30 transition-opacity duration-500 bg-gradient-to-br ${card.accent}`} />
+                  {/* Neon glow effect */}
+                  <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity duration-500 bg-gradient-to-br ${shirt.accent} blur-xl`} />
                   
-                  {/* Content with better readability */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 transform group-hover:translate-y-[-4px] transition-transform duration-300">
-                    <h3 className="graffiti-heading mb-2 text-shadow">{card.title}</h3>
-                    <p className="text-gray-200 leading-relaxed text-shadow-sm">{card.description}</p>
+                  {/* Main content */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                    <h3 className="text-3xl sm:text-4xl font-black text-white mb-2 tracking-tight leading-tight">
+                      {shirt.title}
+                    </h3>
+                    {shirt.subtitle && (
+                      <div className="text-lg sm:text-xl font-bold text-gray-300 mb-4 opacity-80">
+                        {shirt.subtitle}
+                      </div>
+                    )}
+                    <p className="text-sm text-gray-300 mb-6 max-w-xs leading-relaxed">
+                      {shirt.description}
+                    </p>
+                    
+                    {/* CTA Button */}
+                    <button 
+                      onClick={() => window.location.href = '/products'}
+                      className="px-6 py-3 bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 hover:from-purple-500 hover:via-pink-500 hover:to-red-500 text-white font-bold rounded-full transition-all duration-300 transform group-hover:scale-105 shadow-lg hover:shadow-xl"
+                    >
+                      👕 Cop This Design ⚡
+                    </button>
                   </div>
                   
-                  {/* Accent line */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${card.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                  {/* Accent border */}
+                  <div className={`absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-gradient-to-r ${shirt.accent} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <button 
+              onClick={() => window.location.href = '/products'}
+              className="px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              👕 Explore Collection
+            </button>
+            <button 
+              onClick={() => window.location.href = '/ai'}
+              className="px-8 py-4 border-2 border-purple-500 text-purple-400 hover:bg-purple-500 hover:text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105"
+            >
+              🎨 Generate Your Own
+            </button>
           </motion.div>
         </div>
       </AnimatedSection>
