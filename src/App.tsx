@@ -508,7 +508,7 @@ export default function App() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               >
-                Affordable, sustainable, and expressive - for campus life and everyday style.
+                Affordable, sustainable, and expressive - for campus life and everyday.
               </motion.p>
             </div>
           </div>
