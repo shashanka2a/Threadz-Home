@@ -362,28 +362,28 @@ export default function App() {
                 title: "LAID OFF",
                 subtitle: "by AI",
                 description: "When the algorithm becomes your boss",
-                image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=400&h=500&fit=crop&q=80&auto=format",
+                image: "/laid-off.png",
                 accent: "from-red-500 to-orange-500"
               },
               {
                 title: "PROMPT ENGINEER IRL",
                 subtitle: "",
                 description: "Making AI do the heavy lifting",
-                image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=500&fit=crop&q=80&auto=format",
+                image: "/prompt-engineer.png",
                 accent: "from-blue-500 to-cyan-500"
               },
               {
                 title: "TRUST ME, I ASKED CHATGPT",
                 subtitle: "",
                 description: "AI-approved life decisions",
-                image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=500&fit=crop&q=80&auto=format",
+                image: "/asked-chatgpt.png",
                 accent: "from-green-500 to-emerald-500"
               },
               {
                 title: "AI WROTE THIS FIT",
                 subtitle: "",
                 description: "Algorithmic style, human swagger",
-                image: "https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=500&fit=crop&q=80&auto=format",
+                image: "/ai-fit.png",
                 accent: "from-purple-500 to-pink-500"
               }
             ].map((shirt, idx) => (
