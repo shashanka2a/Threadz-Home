@@ -56,30 +56,6 @@ const products = [
     reviews: 78,
     badge: "Limited",
     accent: "from-purple-500 to-pink-500"
-  },
-  {
-    id: "5",
-    name: "AI WROTE THIS FIT",
-    price: 31.99,
-    image: "/ai-fit.png",
-    description: "Algorithmic style, human swagger",
-    category: "AI Humor",
-    rating: 4.9,
-    reviews: 203,
-    badge: "Popular",
-    accent: "from-purple-500 to-pink-500"
-  },
-  {
-    id: "6",
-    name: "AI DESIGN",
-    price: 28.99,
-    image: "/ai-fit.png",
-    description: "Custom AI-generated designs that hit different",
-    category: "Custom",
-    rating: 4.5,
-    reviews: 92,
-    badge: "AI Generated",
-    accent: "from-purple-500 to-pink-500"
   }
 ];
 
