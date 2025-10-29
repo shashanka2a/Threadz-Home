@@ -58,7 +58,14 @@ export default function App() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-md border-b border-purple-500/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src="/threadz.png" alt="Threadz" width={112} height={112} className="object-contain" />
+            <div className="w-7 h-7 overflow-hidden flex items-center justify-center">
+              <img 
+                src="/threadz.png" 
+                alt="Threadz" 
+                className="w-full h-full object-cover origin-center" 
+                style={{ transform: 'scale(4)' }}
+              />
+            </div>
             <h1 className="logo-text">Threadz</h1>
           </div>
           <button 
