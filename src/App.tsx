@@ -188,7 +188,7 @@ export default function App() {
             >
               <div className="aspect-square relative bg-gradient-to-br from-purple-900/20 to-pink-900/20">
                 <ImageWithFallback
-                  src="/coffee-n-gpu.png"
+                  src="/ai-fit.png"
                   alt="Custom T-shirt design"
                   className="w-full h-full object-cover rounded-2xl"
                 />
